@@ -1,0 +1,312 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+// 1. Users & Roles
+enum UserRole {
+  STUDENT
+  BQL_KTX         // Admin
+  ROOM_MANAGER
+  FINANCE_MANAGER
+}
+
+model User {
+  id        String   @id @default(uuid())
+  username  String   @unique
+  password  String
+  role      UserRole
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  isDeleted Boolean  @default(false) // Soft Delete
+
+  // Profile Relations
+  studentHardProfile StudentHardProfile?
+  studentSoftProfile StudentSoftProfile?
+
+  // Domain Relations
+  registrations      Registration[]
+  transferRequests   RoomTransferRequest[]
+  checkoutRequests   CheckoutRequest[]
+  violations         Violation[]
+  feeNotices         FeeNotice[]
+  relatives          Relative[]
+  
+  // Admin Logs
+  performedLogs      ActivityLog[] @relation("PerformedBy")
+  targetLogs         ActivityLog[] @relation("TargetUser")
+}
+
+// ... (existing models)
+
+// 11. Activity Logs
+model ActivityLog {
+  id          String   @id @default(uuid())
+  action      String   // e.g. "UPDATE_PROFILE", "SOFT_DELETE"
+  
+  performerId String
+  performer   User     @relation("PerformedBy", fields: [performerId], references: [id])
+  
+  targetId    String?
+  targetUser  User?    @relation("TargetUser", fields: [targetId], references: [id])
+  
+  details     String?  // JSON string or description of changes
+  timestamp   DateTime @default(now())
+}
+
+// 2. Student Profile (Separated Hard vs Soft Data)
+model StudentHardProfile {
+  id       String @id @default(uuid())
+  userId   String @unique
+  user     User   @relation(fields: [userId], references: [id])
+  
+  fullName String
+  idCard   String @unique // CMND/CCCD - Editable only by Admin
+  mssv     String @unique // Student ID - Editable only by Admin
+}
+
+model StudentSoftProfile {
+  id               String @id @default(uuid())
+  userId           String @unique
+  user             User   @relation(fields: [userId], references: [id])
+  
+  phoneNumber      String // Editable by Student
+  email            String // Editable by Student
+  emergencyContact String // Editable by Student
+}
+
+// 3. Rooms
+enum RoomStatus {
+  AVAILABLE
+  FULL
+  MAINTENANCE
+  LOCKED
+}
+
+model Room {
+  id              String     @id @default(uuid())
+  name            String     @unique
+  type            String     // e.g. "Standard", "Service"
+  capacity        Int
+  currentOccupancy Int       @default(0)
+  status          RoomStatus @default(AVAILABLE)
+  price           Float
+
+  registrations Registration[]
+  violations    Violation[]
+  utilityReadings UtilityReading[]
+}
+
+// ... (existing models)
+
+// 12. Utility Readings
+model UtilityReading {
+  id               String   @id @default(uuid())
+  roomId           String
+  room             Room     @relation(fields: [roomId], references: [id])
+  
+  month            Int
+  year             Int
+  
+  electricityIndex Float
+  waterIndex       Float
+  
+  createdAt        DateTime @default(now())
+  updatedAt        DateTime @updatedAt
+
+  @@unique([roomId, month, year])
+}
+
+// 4. Registrations
+enum RegistrationStatus {
+  PENDING
+  VALIDATED         // BQL Validated
+  APPROVED          // Room Manager Confirmed (Invoice Created)
+  DEPOSIT_PAID      // Finance Confirmed
+  READY_FOR_CHECKIN // Digital Commitment Signed
+  CHECKED_IN
+  CHECKED_OUT
+}
+
+model Registration {
+  id        String             @id @default(uuid())
+  studentId String
+  student   User               @relation(fields: [studentId], references: [id])
+  roomId    String
+  room      Room               @relation(fields: [roomId], references: [id])
+  
+  status    RegistrationStatus @default(PENDING)
+  
+  startDate DateTime?
+  endDate   DateTime?
+  
+  createdAt DateTime           @default(now())
+  updatedAt DateTime           @updatedAt
+}
+
+enum TransferStatus {
+  PENDING
+  APPROVED
+  REJECTED
+  CANCELLED
+}
+
+// 5. Room Transfer Requests
+model RoomTransferRequest {
+  id              String         @id @default(uuid())
+  studentId       String
+  student         User           @relation(fields: [studentId], references: [id])
+  
+  reason          String
+  desiredRoomType String
+  proofs          String[]       // URLs to proof images
+  
+  status          TransferStatus @default(PENDING)
+  adminNote       String?        // Reason for rejection or approval notes
+  
+  targetRoomId    String?        // The room assigned upon approval
+  oldRoomId       String?        // The room the student is moving from
+  
+  createdAt       DateTime       @default(now())
+  updatedAt       DateTime       @updatedAt
+}
+
+enum CheckoutStatus {
+  PENDING
+  INSPECTED
+  APPROVED      // Manager Approved, Ready for Departure
+  COMPLETED     // Physically Left
+  REJECTED
+  CANCELLED
+}
+
+enum CheckoutType {
+  VOLUNTARY
+  FORCED
+}
+
+// 6. Checkout Requests
+model CheckoutRequest {
+  id              String         @id @default(uuid())
+  studentId       String
+  student         User           @relation(fields: [studentId], references: [id])
+  
+  reason          String
+  desiredDate     DateTime
+  
+  // Asset Inspection Result
+  assetInspectionPassed Boolean?
+  assetInspectionNotes  String?
+  
+  status          CheckoutStatus @default(PENDING)
+  type            CheckoutType   @default(VOLUNTARY)
+  adminNote       String?        // For forced eviction reason or rejection note
+  
+  createdAt       DateTime       @default(now())
+  updatedAt       DateTime       @updatedAt
+}
+
+// 7. Fee Notices (PhieuBaoPhi)
+model FeeNotice {
+  id          String   @id @default(uuid())
+  studentId   String
+  student     User     @relation(fields: [studentId], references: [id])
+  
+  title       String   // e.g. "Dorm Fee - October 2023"
+  amount      Float
+  description String?
+  dueDate     DateTime
+  
+  status      String   @default("PENDING") // PENDING, PAID, CANCELLED
+  
+  invoice     Invoice?
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+}
+
+// 8. Invoices (HoaDon)
+model Invoice {
+  id          String   @id @default(uuid())
+  feeNoticeId String   @unique
+  feeNotice   FeeNotice @relation(fields: [feeNoticeId], references: [id])
+  
+  amount      Float
+  issuedAt    DateTime @default(now())
+  
+  receipt     Receipt?
+}
+
+// 9. Receipts (BienLai)
+model Receipt {
+  id        String   @id @default(uuid())
+  invoiceId String   @unique
+  invoice   Invoice  @relation(fields: [invoiceId], references: [id])
+  
+  amount        Float
+  paidAt        DateTime @default(now())
+  paymentMethod String
+  transactionId String?
+  printCount    Int      @default(0)
+}
+
+// 10. Violations
+model Violation {
+  id          String   @id @default(uuid())
+  studentId   String
+  student     User     @relation(fields: [studentId], references: [id])
+  roomId      String
+  room        Room     @relation(fields: [roomId], references: [id])
+  
+  date        DateTime
+  type        String
+  description String
+  
+  createdAt   DateTime @default(now())
+}
+
+// 13. Relatives & Visitors
+model Relative {
+  id               String   @id @default(uuid())
+  studentId        String
+  student          User     @relation(fields: [studentId], references: [id])
+  
+  name             String
+  relationship     String
+  phone            String
+  address          String?
+  isEmergencyContact Boolean @default(false)
+  
+  visitRequests    VisitRequest[]
+  
+  createdAt        DateTime @default(now())
+  updatedAt        DateTime @updatedAt
+}
+
+enum VisitStatus {
+  PENDING
+  APPROVED
+  REJECTED
+  CANCELLED
+}
+
+model VisitRequest {
+  id          String      @id @default(uuid())
+  relativeId  String
+  relative    Relative    @relation(fields: [relativeId], references: [id])
+  
+  purpose     String
+  expectedDate DateTime
+  
+  status      VisitStatus @default(PENDING)
+  adminNote   String?
+  
+  createdAt   DateTime    @default(now())
+  updatedAt   DateTime    @updatedAt
+}
