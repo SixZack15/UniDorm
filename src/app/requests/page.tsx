@@ -52,7 +52,7 @@ export default function RequestsPage() {
                 </div>
                 <div className="flex gap-3 w-full md:w-auto">
                     <Link
-                        href="/requests/create?type=move"
+                        href="/requests/changeRoom"
                         className="flex-1 md:flex-none flex items-center justify-center gap-2 bg-primary hover:bg-primary-dark text-white font-bold py-2.5 px-4 rounded-lg shadow-sm transition-colors"
                     >
                         <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -61,7 +61,7 @@ export default function RequestsPage() {
                         XIN CHUYỂN PHÒNG
                     </Link>
                     <Link
-                        href="/requests/create?type=checkout"
+                        href="/requests/endContract"
                         className="flex-1 md:flex-none flex items-center justify-center gap-2 bg-white border border-red-200 text-red-600 hover:bg-red-50 font-bold py-2.5 px-4 rounded-lg shadow-sm transition-colors"
                     >
                         <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">

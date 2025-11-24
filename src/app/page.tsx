@@ -2,12 +2,14 @@
 
 import Link from 'next/link';
 import { useState } from 'react';
+import { Toaster } from "react-hot-toast";
 
 export default function LoginPage() {
     const [showPassword, setShowPassword] = useState(false);
 
     return (
         <div className="min-h-[calc(100vh-8rem)] flex items-center justify-center">
+            <Toaster/>
             <div className="w-full max-w-6xl grid grid-cols-1 lg:grid-cols-12 gap-8 bg-white rounded-2xl shadow-2xl overflow-hidden">
 
                 {/* Left Column: Branding & Info (Col 1-7) */}
@@ -125,12 +127,16 @@ export default function LoginPage() {
                         </div>
 
                         <div>
-                            <Link
-                                href="/dashboard"
+                            <button
+                                type="button"
+                                onClick={() => {
+                                    localStorage.setItem('userRole', 'STUDENT');
+                                    window.location.href = '/dashboard';
+                                }}
                                 className="w-full flex justify-center py-3 px-4 border border-transparent rounded-md shadow-sm text-sm font-bold text-white bg-primary hover:bg-primary-dark focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary transition-colors"
                             >
                                 Login to Student
-                            </Link>
+                            </button>
                         </div>
                     </form>
 
@@ -147,8 +153,12 @@ export default function LoginPage() {
                         </div>
 
                         <div className="mt-6">
-                            <Link
-                                href="/admin/dashboard"
+                            <button
+                                type="button"
+                                onClick={() => {
+                                    localStorage.setItem('userRole', 'ADMIN');
+                                    window.location.href = '/admin/dashboard';
+                                }}
                                 className="w-full flex justify-center items-center gap-3 py-3 px-4 border border-gray-300 rounded-md shadow-sm bg-white text-sm font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary transition-colors"
                             >
                                 <svg className="h-5 w-5" viewBox="0 0 24 24">
@@ -158,7 +168,7 @@ export default function LoginPage() {
                                     <path d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z" fill="#EA4335" />
                                 </svg>
                                 Login to Admin
-                            </Link>
+                            </button>
                         </div>
                     </div>
                 </div>

@@ -1,35 +1,171 @@
 'use client';
 
+import { useState, useEffect } from 'react';
 import Link from 'next/link';
+import { Toaster } from 'react-hot-toast';
+import { subscriptionStorage, RoomSubscription } from '@/utils/subscriptionStorage';
 
 export default function DashboardPage() {
+    const [subscription, setSubscription] = useState<RoomSubscription | null>(null);
+    const [hasSubscription, setHasSubscription] = useState(false);
+
+    // Load subscription from localStorage on mount
+    useEffect(() => {
+        const loadedSubscription = subscriptionStorage.getSubscription();
+        setSubscription(loadedSubscription);
+        setHasSubscription(loadedSubscription !== null);
+    }, []);
+
+    // Calculate monthly bill (room price + utilities estimate)
+    const calculateBill = () => {
+        if (!subscription) return 0;
+        const utilitiesEstimate = 40000; // Estimated utilities (water, electricity)
+        return subscription.price + utilitiesEstimate;
+    };
+
+    // Calculate due date (15th of current month)
+    const getDueDate = () => {
+        const now = new Date();
+        const dueDate = new Date(now.getFullYear(), now.getMonth(), 15);
+        const today = new Date(now.getFullYear(), now.getMonth(), now.getDate());
+        const daysLeft = Math.ceil((dueDate.getTime() - today.getTime()) / (1000 * 60 * 60 * 24));
+        
+        return {
+            dateString: `15/${(now.getMonth() + 1).toString().padStart(2, '0')}/${now.getFullYear()}`,
+            daysLeft: daysLeft > 0 ? daysLeft : 0,
+            isPastDue: daysLeft < 0
+        };
+    };
+
+    const dueInfo = getDueDate();
+    const monthlyBill = calculateBill();
+
     return (
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
+            <Toaster/>
 
             {/* 1. Hero Section (Desktop: Col 1-8) */}
             <section className="lg:col-span-8 bg-white rounded-2xl shadow-sm p-6 border border-gray-100 flex flex-col justify-between relative overflow-hidden">
                 <div className="relative z-10">
-                    <h1 className="text-2xl font-bold text-gray-900">Xin chào, Nguyễn Văn A! 👋</h1>
-                    <p className="text-gray-500 mt-1">Bạn đang ở: <span className="font-semibold text-primary">Phòng A.304 - Tòa nhà A</span></p>
+                    <h1 className="text-2xl font-bold text-gray-900">Xin chào, {subscription?.studentName || 'Sinh viên'}! 👋</h1>
+                    {hasSubscription && subscription ? (
+                        <p className="text-gray-500 mt-1">
+                            Bạn đang ở: <span className="font-semibold text-primary">{subscription.roomName}</span>
+                            {subscription.registrationStatus === 'Đang ở' && (
+                                <span className="ml-2 inline-flex items-center px-2 py-0.5 rounded text-xs font-medium bg-green-100 text-green-800">
+                                    Đã duyệt
+                                </span>
+                            )}
+                            {subscription.registrationStatus === 'Chờ duyệt' && (
+                                <span className="ml-2 inline-flex items-center px-2 py-0.5 rounded text-xs font-medium bg-yellow-100 text-yellow-800">
+                                    Chờ duyệt
+                                </span>
+                            )}
+                            {subscription.registrationStatus === 'Từ chối' && (
+                                <span className="ml-2 inline-flex items-center px-2 py-0.5 rounded text-xs font-medium bg-red-100 text-red-800">
+                                    Từ chối
+                                </span>
+                            )}
+                        </p>
+                    ) : (
+                        <p className="text-gray-500 mt-1">
+                            Bạn chưa đăng ký phòng. 
+                            <Link href="/rooms" className="text-primary font-semibold hover:underline ml-1">
+                                Đăng ký ngay →
+                            </Link>
+                        </p>
+                    )}
                 </div>
                 <div className="absolute right-0 top-0 h-full w-1/3 bg-gradient-to-l from-red-50 to-transparent opacity-50 pointer-events-none"></div>
             </section>
 
             {/* 2. Finance Widget (Desktop: Col 9-12) - High Priority on Mobile */}
-            <section className="lg:col-span-4 bg-white rounded-2xl shadow-sm p-6 border border-gray-100 border-l-4 border-l-primary">
-                <div className="flex justify-between items-start mb-4">
-                    <h2 className="font-bold text-gray-900">HÓA ĐƠN THÁNG 11</h2>
-                    <span className="bg-red-100 text-red-700 text-xs font-bold px-2 py-1 rounded-full">CHƯA THANH TOÁN</span>
-                </div>
-                <div className="mb-6">
-                    <p className="text-sm text-gray-500">Tổng tiền</p>
-                    <p className="text-3xl font-extrabold text-gray-900">540,000 <span className="text-sm font-medium text-gray-500">VND</span></p>
-                    <p className="text-xs text-red-600 mt-1 font-medium">Hạn đóng: 15/11/2025 (Còn 3 ngày)</p>
-                </div>
-                <button className="w-full bg-primary hover:bg-primary-dark text-white font-bold py-3 rounded-lg transition-colors shadow-md shadow-red-200">
-                    THANH TOÁN NGAY
-                </button>
-            </section>
+            {/* 2. Finance Widget (Desktop: Col 9-12) - High Priority on Mobile */}
+            {hasSubscription && subscription && subscription.registrationStatus === 'Đang ở' ? (
+                <section className="lg:col-span-4 bg-white rounded-2xl shadow-sm p-6 border border-gray-100 border-l-4 border-l-primary">
+                    <div className="flex justify-between items-start mb-4">
+                        <h2 className="font-bold text-gray-900">HÓA ĐƠN THÁNG {new Date().getMonth() + 1}</h2>
+                        <span className="bg-red-100 text-red-700 text-xs font-bold px-2 py-1 rounded-full">CHƯA THANH TOÁN</span>
+                    </div>
+                    <div className="mb-6">
+                        <p className="text-sm text-gray-500">Tổng tiền</p>
+                        <p className="text-3xl font-extrabold text-gray-900">
+                            {monthlyBill.toLocaleString('vi-VN')} <span className="text-sm font-medium text-gray-500">VND</span>
+                        </p>
+                        <div className="text-xs mt-2 space-y-1">
+                            <p className="text-gray-600">• Phí phòng: {subscription.price.toLocaleString('vi-VN')} VND</p>
+                            <p className="text-gray-600">• Điện nước (ước tính): 40,000 VND</p>
+                        </div>
+                        <p className={`text-xs mt-2 font-medium ${dueInfo.isPastDue ? 'text-red-700' : 'text-red-600'}`}>
+                            {dueInfo.isPastDue ? (
+                                `Quá hạn thanh toán!`
+                            ) : (
+                                `Hạn đóng: ${dueInfo.dateString} (Còn ${dueInfo.daysLeft} ngày)`
+                            )}
+                        </p>
+                    </div>
+                    <Link 
+                        href="/finance/pay"
+                        className="w-full flex justify-center items-center bg-primary hover:bg-primary-dark text-white font-bold py-3 rounded-lg transition-colors shadow-md shadow-red-200"
+                    >
+                        THANH TOÁN NGAY
+                    </Link>
+                </section>
+            ) : hasSubscription && subscription && subscription.registrationStatus === 'Chờ duyệt' ? (
+                <section className="lg:col-span-4 bg-yellow-50 rounded-2xl shadow-sm p-6 border border-yellow-200 flex flex-col items-center justify-center text-center">
+                    <div className="w-12 h-12 rounded-full bg-yellow-100 text-yellow-600 flex items-center justify-center mb-3">
+                        <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+                        </svg>
+                    </div>
+                    <h3 className="font-bold text-gray-900 mb-1">Hồ sơ đang chờ duyệt</h3>
+                    <p className="text-sm text-gray-600 mb-4">Ban quản lý đang xem xét hồ sơ đăng ký phòng của bạn.</p>
+                    <Link 
+                        href="/profile"
+                        className="px-6 py-2 bg-white text-yellow-700 border border-yellow-300 rounded-lg hover:bg-yellow-100 transition-colors font-medium text-sm"
+                    >
+                        Xem chi tiết
+                    </Link>
+                </section>
+            ) : hasSubscription && subscription && subscription.registrationStatus === 'Từ chối' ? (
+                <section className="lg:col-span-4 bg-red-50 rounded-2xl shadow-sm p-6 border border-red-200 flex flex-col items-center justify-center text-center">
+                    <div className="w-12 h-12 rounded-full bg-red-100 text-red-600 flex items-center justify-center mb-3">
+                        <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                        </svg>
+                    </div>
+                    <h3 className="font-bold text-gray-900 mb-1">Hồ sơ bị từ chối</h3>
+                    <p className="text-sm text-gray-600 mb-4">Rất tiếc, hồ sơ đăng ký của bạn không được chấp nhận.</p>
+                    <div className="flex gap-2">
+                        <Link 
+                            href="/profile"
+                            className="px-4 py-2 bg-white text-gray-700 border border-gray-300 rounded-lg hover:bg-gray-50 transition-colors font-medium text-sm"
+                        >
+                            Xem chi tiết
+                        </Link>
+                        <Link 
+                            href="/rooms"
+                            className="px-4 py-2 bg-primary text-white rounded-lg hover:bg-red-700 transition-colors font-medium text-sm"
+                        >
+                            Đăng ký lại
+                        </Link>
+                    </div>
+                </section>
+            ) : (
+                <section className="lg:col-span-4 bg-gradient-to-br from-gray-50 to-gray-100 rounded-2xl shadow-sm p-6 border border-gray-200 flex flex-col items-center justify-center text-center">
+                    <svg className="w-12 h-12 text-gray-400 mb-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 14l6-6m-5.5.5h.01m4.99 5h.01M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16l3.5-2 3.5 2 3.5-2 3.5 2zM10 8.5a.5.5 0 11-1 0 .5.5 0 011 0zm5 5a.5.5 0 11-1 0 .5.5 0 011 0z" />
+                    </svg>
+                    <h3 className="font-bold text-gray-900 mb-1">Chưa có hóa đơn</h3>
+                    <p className="text-sm text-gray-600 mb-4">Đăng ký phòng để xem hóa đơn</p>
+                    <Link 
+                        href="/rooms"
+                        className="px-6 py-2 bg-primary text-white rounded-lg hover:bg-red-700 transition-colors font-medium text-sm"
+                    >
+                        Đăng ký phòng
+                    </Link>
+                </section>
+            )}
 
             {/* 3. Contract Widget (Desktop: Col 1-8) */}
             <section className="lg:col-span-8 bg-white rounded-2xl shadow-sm p-6 border border-gray-100">

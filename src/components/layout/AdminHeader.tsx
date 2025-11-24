@@ -1,8 +1,15 @@
 'use client';
 
 import Link from 'next/link';
+import { useRouter } from 'next/navigation';
 
 export function AdminHeader({ onMenuClick }: { onMenuClick: () => void }) {
+    const router = useRouter();
+
+    const handleProfileClick = () => {
+        router.push('/admin/profile');
+    };
+
     return (
         <header className="bg-red-900 text-white shadow-md fixed top-0 left-0 right-0 z-50 h-16 flex items-center px-4 justify-between">
             {/* Left: Hamburger (Mobile) & Logo */}
@@ -43,9 +50,13 @@ export function AdminHeader({ onMenuClick }: { onMenuClick: () => void }) {
                     <span className="absolute top-1 right-1 w-2 h-2 bg-yellow-400 rounded-full"></span>
                 </button>
 
-                <div className="w-8 h-8 bg-white/20 rounded-full flex items-center justify-center text-sm font-bold">
+                <button
+                    onClick={handleProfileClick}
+                    className="w-8 h-8 bg-white/20 rounded-full flex items-center justify-center text-sm font-bold hover:bg-white/30 transition-colors cursor-pointer"
+                    title="Profile"
+                >
                     A
-                </div>
+                </button>
             </div>
         </header>
     );

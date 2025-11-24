@@ -2,9 +2,11 @@
 
 import { useState } from 'react';
 import Link from 'next/link';
+import { useRouter } from 'next/navigation';
 
 export default function RoomsPage() {
     const [activeTab, setActiveTab] = useState<'list' | 'records'>('list');
+    const router = useRouter();
 
     // Mock Data for Rooms
     const rooms = [
@@ -147,7 +149,6 @@ export default function RoomsPage() {
                             </select>
                             <select className="block w-full md:w-auto rounded-md border-gray-300 py-1.5 text-base focus:border-primary focus:outline-none focus:ring-primary sm:text-sm">
                                 <option>Tiện nghi</option>
-                                <option>Máy lạnh</option>
                                 <option>Quạt trần</option>
                             </select>
                         </div>
@@ -198,7 +199,7 @@ export default function RoomsPage() {
                                         </p>
                                     </div>
 
-                                    <button className="w-full flex justify-center items-center px-4 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-primary hover:bg-primary-dark focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary transition-colors">
+                                    <button onClick={() => router.push("rooms/subscribe")} className="w-full flex justify-center items-center px-4 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-primary hover:bg-primary-dark focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary transition-colors">
                                         ĐĂNG KÝ NGAY
                                     </button>
                                 </div>

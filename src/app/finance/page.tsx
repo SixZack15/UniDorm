@@ -76,12 +76,15 @@ export default function FinancePage() {
                         <p className="text-sm text-red-600 font-medium mt-1">Hạn chót: 15/11/2025</p>
 
                         <div className="mt-6">
-                            <button className="w-full bg-primary hover:bg-primary-dark text-white font-bold py-3 px-4 rounded-lg shadow-md shadow-red-100 transition-colors flex items-center justify-center gap-2">
+                            <Link 
+                                href="/finance/pay"
+                                className="w-full bg-primary hover:bg-primary-dark text-white font-bold py-3 px-4 rounded-lg shadow-md shadow-red-100 transition-colors flex items-center justify-center gap-2"
+                            >
                                 THANH TOÁN TẤT CẢ
                                 <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M14 5l7 7m0 0l-7 7m7-7H3" />
                                 </svg>
-                            </button>
+                            </Link>
                         </div>
                     </section>
 
@@ -202,9 +205,12 @@ export default function FinancePage() {
                                                 <input type="checkbox" className="rounded border-gray-300 text-primary focus:ring-primary h-4 w-4" />
                                                 <span className="text-sm text-gray-700 font-medium">Chọn thanh toán</span>
                                             </label>
-                                            <button className="bg-primary hover:bg-primary-dark text-white font-bold py-2 px-6 rounded-lg shadow-sm transition-colors text-sm">
+                                            <Link 
+                                                href="/finance/pay"
+                                                className="bg-primary hover:bg-primary-dark text-white font-bold py-2 px-6 rounded-lg shadow-sm transition-colors text-sm inline-flex items-center justify-center"
+                                            >
                                                 Thanh toán
-                                            </button>
+                                            </Link>
                                         </div>
                                     </div>
                                 </div>

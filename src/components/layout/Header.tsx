@@ -1,9 +1,34 @@
 'use client';
 
 import Link from 'next/link';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
+import { useRouter } from 'next/navigation';
 
 export function Header({ onMenuClick }: { onMenuClick: () => void }) {
+    const router = useRouter();
+    const [userRole, setUserRole] = useState<string | null>(null);
+
+    useEffect(() => {
+        const role = localStorage.getItem('userRole');
+        setUserRole(role);
+    }, []);
+
+    const handleProfileClick = () => {
+        const role = localStorage.getItem('userRole');
+        if (role === 'ADMIN') {
+            router.push('/admin/profile');
+        } else {
+            router.push('/profile');
+        }
+    };
+
+    const handleNotificationClick = () => {
+        const role = localStorage.getItem('userRole');
+        if (role === 'STUDENT') {
+            router.push('/students/notifications');
+        }
+    };
+
     return (
         <header className="bg-primary text-white shadow-md fixed top-0 left-0 right-0 z-50 h-16 flex items-center px-4 justify-between">
             {/* Left: Hamburger (Mobile) & Logo */}
@@ -34,17 +59,26 @@ export function Header({ onMenuClick }: { onMenuClick: () => void }) {
 
             {/* Right: Actions */}
             <div className="flex items-center gap-4">
-                <button className="p-2 hover:bg-white/10 rounded-full transition-colors relative">
-                    <span className="sr-only">Notifications</span>
-                    <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9" />
-                    </svg>
-                    <span className="absolute top-1 right-1 w-2 h-2 bg-yellow-400 rounded-full"></span>
-                </button>
+                {userRole === 'STUDENT' && (
+                    <button 
+                        onClick={handleNotificationClick}
+                        className="p-2 hover:bg-white/10 rounded-full transition-colors relative"
+                    >
+                        <span className="sr-only">Notifications</span>
+                        <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9" />
+                        </svg>
+                        <span className="absolute top-1 right-1 w-2 h-2 bg-yellow-400 rounded-full"></span>
+                    </button>
+                )}
 
-                <div className="w-8 h-8 bg-white/20 rounded-full flex items-center justify-center text-sm font-bold">
-                    U
-                </div>
+                <button
+                    onClick={handleProfileClick}
+                    className="w-8 h-8 bg-white/20 rounded-full flex items-center justify-center text-sm font-bold hover:bg-white/30 transition-colors cursor-pointer"
+                    title="Profile"
+                >
+                    {userRole === 'ADMIN' ? 'A' : 'U'}
+                </button>
             </div>
         </header>
     );
