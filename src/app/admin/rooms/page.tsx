@@ -2,6 +2,7 @@
 
 import Link from 'next/link';
 import { useState } from 'react';
+import toast, { Toaster } from 'react-hot-toast';
 
 export default function RoomMasterPage() {
     // Mock Data
@@ -62,6 +63,7 @@ export default function RoomMasterPage() {
 
     return (
         <div className="space-y-6">
+            <Toaster position="top-right" />
             {/* Breadcrumb */}
             <nav className="flex text-sm text-gray-500">
                 <Link href="/dashboard" className="hover:text-primary">Trang chủ</Link>
@@ -158,18 +160,15 @@ export default function RoomMasterPage() {
                 </div>
 
                 <div className="flex gap-3 w-full lg:w-auto">
-                    <button className="flex-1 lg:flex-none flex items-center justify-center gap-2 bg-white border border-gray-300 text-gray-700 hover:bg-gray-50 font-medium py-2 px-4 rounded-lg shadow-sm transition-colors text-sm">
-                        <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-8l-4-4m0 0L8 8m4-4v12" />
-                        </svg>
-                        Import Excel
-                    </button>
-                    <button className="flex-1 lg:flex-none flex items-center justify-center gap-2 bg-primary hover:bg-primary-dark text-white font-bold py-2 px-4 rounded-lg shadow-sm transition-colors text-sm">
+                    <Link
+                        href="/admin/rooms/add"
+                        className="flex-1 lg:flex-none flex items-center justify-center gap-2 bg-primary hover:bg-primary-dark text-white font-bold py-2 px-4 rounded-lg shadow-sm transition-colors text-sm"
+                    >
                         <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
                         </svg>
                         THÊM PHÒNG
-                    </button>
+                    </Link>
                 </div>
             </div>
 
@@ -222,11 +221,15 @@ export default function RoomMasterPage() {
                                     </td>
                                     <td className="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
                                         <div className="flex justify-end gap-2">
-                                            <button className="text-blue-600 hover:text-blue-900 p-1 hover:bg-blue-50 rounded" title="Sửa">
+                                            <Link
+                                                href={`/admin/rooms/add?id=${room.id}`}
+                                                className="text-blue-600 hover:text-blue-900 p-1 hover:bg-blue-50 rounded"
+                                                title="Sửa"
+                                            >
                                                 <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
                                                 </svg>
-                                            </button>
+                                            </Link>
                                             {room.currentOccupancy > 0 ? (
                                                 <button className="text-gray-400 cursor-not-allowed p-1" title="Không thể xóa phòng đang có người ở" disabled>
                                                     <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -234,7 +237,16 @@ export default function RoomMasterPage() {
                                                     </svg>
                                                 </button>
                                             ) : (
-                                                <button className="text-red-600 hover:text-red-900 p-1 hover:bg-red-50 rounded" title="Xóa">
+                                                <button
+                                                    onClick={() => {
+                                                        toast.success('Đã xóa phòng thành công!', {
+                                                            duration: 2000,
+                                                            icon: '✅',
+                                                        });
+                                                    }}
+                                                    className="text-red-600 hover:text-red-900 p-1 hover:bg-red-50 rounded"
+                                                    title="Xóa"
+                                                >
                                                     <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
                                                     </svg>
@@ -319,12 +331,15 @@ export default function RoomMasterPage() {
                         </div>
 
                         <div className="flex gap-2 pt-2 border-t border-gray-100">
-                            <button className="flex-1 bg-gray-50 text-gray-700 hover:bg-gray-100 font-medium py-2 px-4 rounded-lg text-sm transition-colors flex items-center justify-center gap-1">
+                            <Link
+                                href={`/admin/rooms/add?id=${room.id}`}
+                                className="flex-1 bg-gray-50 text-gray-700 hover:bg-gray-100 font-medium py-2 px-4 rounded-lg text-sm transition-colors flex items-center justify-center gap-1"
+                            >
                                 <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
                                 </svg>
                                 Sửa
-                            </button>
+                            </Link>
                             {room.currentOccupancy > 0 ? (
                                 <button className="flex-1 bg-gray-100 text-gray-400 cursor-not-allowed font-medium py-2 px-4 rounded-lg text-sm transition-colors flex items-center justify-center gap-1" disabled>
                                     <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -333,7 +348,15 @@ export default function RoomMasterPage() {
                                     Xóa
                                 </button>
                             ) : (
-                                <button className="flex-1 bg-red-50 text-red-600 hover:bg-red-100 font-medium py-2 px-4 rounded-lg text-sm transition-colors flex items-center justify-center gap-1">
+                                <button
+                                    onClick={() => {
+                                        toast.success('Đã xóa phòng thành công!', {
+                                            duration: 2000,
+                                            icon: '✅',
+                                        });
+                                    }}
+                                    className="flex-1 bg-red-50 text-red-600 hover:bg-red-100 font-medium py-2 px-4 rounded-lg text-sm transition-colors flex items-center justify-center gap-1"
+                                >
                                     <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
                                     </svg>

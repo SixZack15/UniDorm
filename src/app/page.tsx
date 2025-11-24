@@ -152,7 +152,7 @@ export default function LoginPage() {
                             </div>
                         </div>
 
-                        <div className="mt-6">
+                        <div className="mt-6 space-y-3">
                             <button
                                 type="button"
                                 onClick={() => {
@@ -168,6 +168,19 @@ export default function LoginPage() {
                                     <path d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z" fill="#EA4335" />
                                 </svg>
                                 Login to Admin
+                            </button>
+                            <button
+                                type="button"
+                                onClick={() => {
+                                    localStorage.setItem('userRole', 'MANAGEMENT');
+                                    window.location.href = '/management/dashboard';
+                                }}
+                                className="w-full flex justify-center items-center gap-3 py-3 px-4 border border-primary rounded-md shadow-sm bg-primary/10 text-sm font-medium text-primary hover:bg-primary/20 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary transition-colors"
+                            >
+                                <svg className="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4" />
+                                </svg>
+                                Login to Ban Quản lý phòng
                             </button>
                         </div>
                     </div>

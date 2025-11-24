@@ -2,11 +2,14 @@
 
 import Link from 'next/link';
 import { useState } from 'react';
+import { useRouter } from 'next/navigation';
+import toast, { Toaster } from 'react-hot-toast';
 
 export default function StudentRecordsPage() {
+    const router = useRouter();
     // Force Rebuild
     // Mock Data
-    const students = [
+    const [students, setStudents] = useState([
         {
             id: '21748020',
             name: 'Nguyễn Văn A',
@@ -47,10 +50,21 @@ export default function StudentRecordsPage() {
             statusLabel: 'ĐANG Ở',
             statusColor: 'bg-green-100 text-green-800',
         },
-    ];
+    ]);
+
+    const handleDelete = (studentId: string) => {
+        if (confirm('Bạn có chắc chắn muốn xóa sinh viên này?')) {
+            setStudents(prev => prev.filter(s => s.id !== studentId));
+            toast.success('Đã xóa sinh viên thành công!', {
+                duration: 2000,
+                icon: '✅',
+            });
+        }
+    };
 
     return (
         <div className="space-y-6">
+            <Toaster position="top-right" />
             {/* Breadcrumb */}
             <nav className="flex text-sm text-gray-500">
                 <Link href="/dashboard" className="hover:text-primary">Trang chủ</Link>
@@ -64,12 +78,15 @@ export default function StudentRecordsPage() {
             <div className="flex flex-col gap-4">
                 <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
                     <h1 className="text-2xl font-bold text-gray-900">Quản lý Hồ sơ Sinh viên</h1>
-                    <button className="bg-primary hover:bg-primary-dark text-white font-bold py-2.5 px-4 rounded-lg shadow-sm transition-colors flex items-center gap-2">
+                    <Link
+                        href="/admin/students/new"
+                        className="bg-primary hover:bg-primary-dark text-white font-bold py-2.5 px-4 rounded-lg shadow-sm transition-colors flex items-center gap-2"
+                    >
                         <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
                         </svg>
                         THÊM HỒ SƠ MỚI
-                    </button>
+                    </Link>
                 </div>
 
                 {/* Toolbar */}
@@ -145,12 +162,20 @@ export default function StudentRecordsPage() {
                                     </td>
                                     <td className="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
                                         <div className="flex justify-end gap-2">
-                                            <button className="text-blue-600 hover:text-blue-900 p-1 hover:bg-blue-50 rounded" title="Sửa">
+                                            <Link
+                                                href={`/admin/students/edit?id=${student.id}`}
+                                                className="text-blue-600 hover:text-blue-900 p-1 hover:bg-blue-50 rounded"
+                                                title="Sửa"
+                                            >
                                                 <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
                                                 </svg>
-                                            </button>
-                                            <button className="text-red-600 hover:text-red-900 p-1 hover:bg-red-50 rounded" title="Xóa">
+                                            </Link>
+                                            <button
+                                                onClick={() => handleDelete(student.id)}
+                                                className="text-red-600 hover:text-red-900 p-1 hover:bg-red-50 rounded"
+                                                title="Xóa"
+                                            >
                                                 <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
                                                 </svg>
@@ -240,13 +265,19 @@ export default function StudentRecordsPage() {
                         </div>
 
                         <div className="flex gap-2 pt-3 border-t border-gray-100">
-                            <button className="flex-1 flex items-center justify-center gap-1 py-2 rounded-lg bg-gray-50 text-gray-700 hover:bg-gray-100 text-sm font-medium">
+                            <Link
+                                href={`/admin/students/edit?id=${student.id}`}
+                                className="flex-1 flex items-center justify-center gap-1 py-2 rounded-lg bg-gray-50 text-gray-700 hover:bg-gray-100 text-sm font-medium"
+                            >
                                 <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
                                 </svg>
                                 Cập nhật
-                            </button>
-                            <button className="flex-1 flex items-center justify-center gap-1 py-2 rounded-lg bg-red-50 text-red-600 hover:bg-red-100 text-sm font-medium">
+                            </Link>
+                            <button
+                                onClick={() => handleDelete(student.id)}
+                                className="flex-1 flex items-center justify-center gap-1 py-2 rounded-lg bg-red-50 text-red-600 hover:bg-red-100 text-sm font-medium"
+                            >
                                 <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
                                 </svg>

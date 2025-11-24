@@ -2,16 +2,23 @@
 
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
+import { useState, useEffect } from 'react';
 
-export function AdminHeader({ onMenuClick }: { onMenuClick: () => void }) {
+export function ManagementHeader({ onMenuClick }: { onMenuClick: () => void }) {
     const router = useRouter();
+    const [userRole, setUserRole] = useState<string | null>(null);
+
+    useEffect(() => {
+        const role = localStorage.getItem('userRole');
+        setUserRole(role);
+    }, []);
 
     const handleProfileClick = () => {
-        router.push('/admin/profile');
+        router.push('/management/profile');
     };
 
     return (
-        <header className="bg-red-900 text-white shadow-md fixed top-0 left-0 right-0 z-50 h-16 flex items-center px-4 justify-between">
+        <header className="bg-primary text-white shadow-md fixed top-0 left-0 right-0 z-50 h-16 flex items-center px-4 justify-between">
             {/* Left: Hamburger (Mobile) & Logo */}
             <div className="flex items-center gap-4">
                 <button
@@ -24,20 +31,16 @@ export function AdminHeader({ onMenuClick }: { onMenuClick: () => void }) {
                     </svg>
                 </button>
 
-                <Link href="/admin/dashboard" className="text-xl font-bold tracking-tight flex items-center gap-2">
-                    <span className="bg-white text-red-900 px-2 py-1 rounded text-sm font-extrabold">VLU</span>
-                    <span>DORM ADMIN</span>
+                <Link href="/management/dashboard" className="text-xl font-bold tracking-tight flex items-center gap-2">
+                    <span className="bg-white text-primary px-2 py-1 rounded text-sm font-extrabold">VLU</span>
+                    <span>DORM MANAGEMENT</span>
                 </Link>
 
                 {/* Desktop Nav */}
                 <nav className="hidden lg:flex items-center gap-6 ml-8 text-sm font-medium">
-                    <Link href="/admin/dashboard" className="hover:text-white/80 transition-colors">Dashboard</Link>
-                    <Link href="/admin/students" className="hover:text-white/80 transition-colors">Students</Link>
-                    <Link href="/admin/rooms" className="hover:text-white/80 transition-colors">Rooms</Link>
-                    <Link href="/admin/requests" className="hover:text-white/80 transition-colors">Requests</Link>
-                    <Link href="/admin/finance" className="hover:text-white/80 transition-colors">Finance</Link>
-                    <Link href="/admin/reports" className="hover:text-white/80 transition-colors">Reports</Link>
-                    <Link href="/admin/settings" className="bg-white/20 px-3 py-1 rounded hover:bg-white/30 transition-colors">ADMIN</Link>
+                    <Link href="/management/dashboard" className="hover:text-white/80 transition-colors">Dashboard</Link>
+                    <Link href="/management/rooms" className="hover:text-white/80 transition-colors">Rooms</Link>
+                    <Link href="/management/requests" className="hover:text-white/80 transition-colors">Requests</Link>
                 </nav>
             </div>
 
@@ -56,9 +59,10 @@ export function AdminHeader({ onMenuClick }: { onMenuClick: () => void }) {
                     className="w-8 h-8 bg-white/20 rounded-full flex items-center justify-center text-sm font-bold hover:bg-white/30 transition-colors cursor-pointer"
                     title="Profile"
                 >
-                    A
+                    M
                 </button>
             </div>
         </header>
     );
 }
+

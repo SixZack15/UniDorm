@@ -4,6 +4,7 @@ import { useState } from 'react';
 import { usePathname } from 'next/navigation';
 import { Header } from './Header';
 import { AdminHeader } from './AdminHeader';
+import { ManagementHeader } from './ManagementHeader';
 import { GuestHeader } from './GuestHeader';
 import { Footer } from './Footer';
 import { Sidebar } from './Sidebar';
@@ -16,6 +17,8 @@ export function Shell({ children }: { children: React.ReactNode }) {
     const isGuest = pathname === '/';
     // Determine if we are in "Admin Mode"
     const isAdmin = pathname?.startsWith('/admin');
+    // Determine if we are in "Management Mode"
+    const isManagement = pathname?.startsWith('/management');
 
     return (
         <div className="min-h-screen flex flex-col bg-gray-50 text-gray-900 font-sans">
@@ -24,6 +27,11 @@ export function Shell({ children }: { children: React.ReactNode }) {
             ) : isAdmin ? (
                 <>
                     <AdminHeader onMenuClick={() => setIsSidebarOpen(true)} />
+                    <Sidebar isOpen={isSidebarOpen} onClose={() => setIsSidebarOpen(false)} />
+                </>
+            ) : isManagement ? (
+                <>
+                    <ManagementHeader onMenuClick={() => setIsSidebarOpen(true)} />
                     <Sidebar isOpen={isSidebarOpen} onClose={() => setIsSidebarOpen(false)} />
                 </>
             ) : (
