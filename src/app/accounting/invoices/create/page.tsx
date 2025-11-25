@@ -56,7 +56,7 @@ export default function CreateInvoicePage() {
         e.preventDefault();
         
         if (!formData.mssv || !formData.price || !formData.name) {
-            toast.error('Please fill in all required fields');
+            toast.error('Vui lòng điền đầy đủ các trường bắt buộc');
             return;
         }
 
@@ -75,7 +75,7 @@ export default function CreateInvoicePage() {
                     notes: formData.notes
                 } : inv
             );
-            toast.success('Invoice updated successfully');
+            toast.success('Cập nhật biên lai thành công');
         } else {
             // Create new
             const newInvoice: Invoice = {
@@ -88,7 +88,7 @@ export default function CreateInvoicePage() {
                 notes: formData.notes
             };
             invoices = [newInvoice, ...invoices];
-            toast.success('Invoice created successfully');
+            toast.success('Tạo biên lai thành công');
         }
 
         localStorage.setItem('accounting_invoices', JSON.stringify(invoices));
@@ -112,7 +112,7 @@ export default function CreateInvoicePage() {
                     </svg>
                 </Link>
                 <h1 className="text-2xl font-bold text-gray-900">
-                    {editId ? 'Edit Invoice' : 'Create New Invoice'}
+                    {editId ? 'Chỉnh sửa Biên lai' : 'Tạo Biên lai Mới'}
                 </h1>
             </div>
 
@@ -121,7 +121,7 @@ export default function CreateInvoicePage() {
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                         <div>
                             <label htmlFor="mssv" className="block text-sm font-medium text-gray-700 mb-1">
-                                Student ID (MSSV) <span className="text-red-500">*</span>
+                                Mã số sinh viên (MSSV) <span className="text-red-500">*</span>
                             </label>
                             <input
                                 type="text"
@@ -136,7 +136,7 @@ export default function CreateInvoicePage() {
 
                         <div>
                             <label htmlFor="name" className="block text-sm font-medium text-gray-700 mb-1">
-                                Student Name <span className="text-red-500">*</span>
+                                Tên sinh viên <span className="text-red-500">*</span>
                             </label>
                             <input
                                 type="text"
@@ -153,7 +153,7 @@ export default function CreateInvoicePage() {
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                         <div>
                             <label htmlFor="price" className="block text-sm font-medium text-gray-700 mb-1">
-                                Amount (VND) <span className="text-red-500">*</span>
+                                Số tiền (VND) <span className="text-red-500">*</span>
                             </label>
                             <div className="relative rounded-md shadow-sm">
                                 <input
@@ -173,7 +173,7 @@ export default function CreateInvoicePage() {
 
                         <div>
                             <label htmlFor="status" className="block text-sm font-medium text-gray-700 mb-1">
-                                Status
+                                Trạng thái
                             </label>
                             <select
                                 id="status"
@@ -182,16 +182,16 @@ export default function CreateInvoicePage() {
                                 onChange={handleChange}
                                 className="w-full rounded-md border-gray-300 shadow-sm focus:border-emerald-500 focus:ring-emerald-500 sm:text-sm py-2 px-3 border"
                             >
-                                <option value="Pending">Pending</option>
-                                <option value="Paid">Paid</option>
-                                <option value="Overdue">Overdue</option>
+                                <option value="Pending">Chờ thanh toán</option>
+                                <option value="Paid">Đã thanh toán</option>
+                                <option value="Overdue">Quá hạn</option>
                             </select>
                         </div>
                     </div>
 
                     <div>
                         <label htmlFor="notes" className="block text-sm font-medium text-gray-700 mb-1">
-                            Additional Notes
+                            Ghi chú thêm
                         </label>
                         <textarea
                             id="notes"
@@ -200,7 +200,7 @@ export default function CreateInvoicePage() {
                             value={formData.notes}
                             onChange={handleChange}
                             className="w-full rounded-md border-gray-300 shadow-sm focus:border-emerald-500 focus:ring-emerald-500 sm:text-sm py-2 px-3 border"
-                            placeholder="Enter any additional details about this invoice..."
+                            placeholder="Nhập thêm thông tin chi tiết về biên lai này..."
                         />
                     </div>
 
@@ -209,13 +209,13 @@ export default function CreateInvoicePage() {
                             href="/accounting/invoices"
                             className="px-4 py-2 border border-gray-300 rounded-md shadow-sm text-sm font-medium text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-emerald-500"
                         >
-                            Cancel
+                            Hủy
                         </Link>
                         <button
                             type="submit"
                             className="px-4 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-emerald-600 hover:bg-emerald-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-emerald-500"
                         >
-                            {editId ? 'Update Invoice' : 'Create Invoice'}
+                            {editId ? 'Cập nhật' : 'Tạo mới'}
                         </button>
                     </div>
                 </form>

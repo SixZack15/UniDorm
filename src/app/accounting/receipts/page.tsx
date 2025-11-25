@@ -37,11 +37,11 @@ export default function ReceiptsPage() {
     }, []);
 
     const handleDelete = (id: string) => {
-        if (confirm('Are you sure you want to delete this receipt?')) {
+        if (confirm('Bạn có chắc chắn muốn xóa hóa đơn này không?')) {
             const newReceipts = receipts.filter(r => r.id !== id);
             setReceipts(newReceipts);
             localStorage.setItem('accounting_receipts', JSON.stringify(newReceipts));
-            toast.success('Receipt deleted successfully');
+            toast.success('Đã xóa hóa đơn thành công');
         }
     };
 
@@ -53,15 +53,15 @@ export default function ReceiptsPage() {
         return new Intl.NumberFormat('vi-VN', { style: 'currency', currency: 'VND' }).format(amount);
     };
 
-    if (isLoading) return <div className="p-8 text-center">Loading receipts...</div>;
+    if (isLoading) return <div className="p-8 text-center">Đang tải hóa đơn...</div>;
 
     return (
         <div className="space-y-6">
             <Toaster />
             <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 print:hidden">
                 <div>
-                    <h1 className="text-2xl font-bold text-gray-900">Receipt Management</h1>
-                    <p className="text-gray-500">Track and manage payment receipts</p>
+                    <h1 className="text-2xl font-bold text-gray-900">Quản lý Hóa đơn</h1>
+                    <p className="text-gray-500">Theo dõi và quản lý hóa đơn thanh toán</p>
                 </div>
                 <Link 
                     href="/accounting/receipts/new"
@@ -70,7 +70,7 @@ export default function ReceiptsPage() {
                     <svg className="-ml-1 mr-2 h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4v16m8-8H4" />
                     </svg>
-                    Create Receipt
+                    Tạo Hóa đơn
                 </Link>
             </div>
 
@@ -79,18 +79,18 @@ export default function ReceiptsPage() {
                     <table className="min-w-full divide-y divide-gray-200">
                         <thead className="bg-gray-50">
                             <tr>
-                                <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Receipt ID</th>
-                                <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Student</th>
-                                <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Date</th>
-                                <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Amount</th>
-                                <th scope="col" className="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider print:hidden">Actions</th>
+                                <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Mã Hóa đơn</th>
+                                <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Sinh viên</th>
+                                <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Ngày</th>
+                                <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Số tiền</th>
+                                <th scope="col" className="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider print:hidden">Thao tác</th>
                             </tr>
                         </thead>
                         <tbody className="bg-white divide-y divide-gray-200">
                             {receipts.length === 0 ? (
                                 <tr>
                                     <td colSpan={5} className="px-6 py-12 text-center text-gray-500">
-                                        No receipts found. Create one to get started.
+                                        Không tìm thấy hóa đơn nào. Hãy tạo mới để bắt đầu.
                                     </td>
                                 </tr>
                             ) : (
@@ -121,7 +121,7 @@ export default function ReceiptsPage() {
                                                 <button
                                                     onClick={() => router.push(`/accounting/receipts/view?id=${receipt.id}`)}
                                                     className="text-blue-600 hover:text-blue-900 bg-blue-50 p-2 rounded hover:bg-blue-100 transition-colors"
-                                                    title="View"
+                                                    title="Xem"
                                                 >
                                                     <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
@@ -131,7 +131,7 @@ export default function ReceiptsPage() {
                                                 <button
                                                     onClick={() => router.push(`/accounting/receipts/new?id=${receipt.id}`)}
                                                     className="text-indigo-600 hover:text-indigo-900 bg-indigo-50 p-2 rounded hover:bg-indigo-100 transition-colors"
-                                                    title="Edit"
+                                                    title="Chỉnh sửa"
                                                 >
                                                     <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
@@ -140,7 +140,7 @@ export default function ReceiptsPage() {
                                                 <button
                                                     onClick={handlePrint}
                                                     className="text-gray-600 hover:text-gray-900 bg-gray-100 p-2 rounded hover:bg-gray-200 transition-colors"
-                                                    title="Print Page"
+                                                    title="In trang"
                                                 >
                                                     <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 17h2a2 2 0 002-2v-4a2 2 0 00-2-2H5a2 2 0 00-2 2v4a2 2 0 002 2h2m2 4h6a2 2 0 002-2v-4a2 2 0 00-2-2H9a2 2 0 00-2 2v4a2 2 0 002 2zm8-12V5a2 2 0 00-2-2H9a2 2 0 00-2 2v4h10z" />
@@ -149,7 +149,7 @@ export default function ReceiptsPage() {
                                                 <button
                                                     onClick={() => handleDelete(receipt.id)}
                                                     className="text-red-600 hover:text-red-900 bg-red-50 p-2 rounded hover:bg-red-100 transition-colors"
-                                                    title="Delete"
+                                                    title="Xóa"
                                                 >
                                                     <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />

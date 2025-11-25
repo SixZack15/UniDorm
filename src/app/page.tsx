@@ -173,8 +173,8 @@ export default function LoginPage() {
                                     </svg>
                                 </div>
                                 <div className="flex-1 text-left">
-                                    <p className="font-bold text-base">Admin Panel</p>
-                                    <p className="text-xs text-purple-100">Quản trị viên</p>
+                                    <p className="font-bold text-base">Admin</p>
+                                    <p className="text-xs text-purple-100">Ban Quản Lý Ký Túc Xá</p>
                                 </div>
                                 <svg className="w-5 h-5 group-hover:translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
@@ -197,7 +197,7 @@ export default function LoginPage() {
                                 </div>
                                 <div className="flex-1 text-left">
                                     <p className="font-bold text-base">Room Management</p>
-                                    <p className="text-xs text-orange-100">Ban Quản lý phòng</p>
+                                    <p className="text-xs text-orange-100">Bộ Phận Quản lý phòng</p>
                                 </div>
                                 <svg className="w-5 h-5 group-hover:translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />

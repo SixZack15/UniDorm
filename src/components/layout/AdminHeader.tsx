@@ -35,7 +35,6 @@ export function AdminHeader({ onMenuClick }: { onMenuClick: () => void }) {
                     <Link href="/admin/students" className="hover:text-white/80 transition-colors">Students</Link>
                     <Link href="/admin/rooms" className="hover:text-white/80 transition-colors">Rooms</Link>
                     <Link href="/admin/requests" className="hover:text-white/80 transition-colors">Requests</Link>
-                    <Link href="/admin/finance" className="hover:text-white/80 transition-colors">Finance</Link>
                     <Link href="/admin/reports" className="hover:text-white/80 transition-colors">Reports</Link>
                     <Link href="/admin/settings" className="bg-white/20 px-3 py-1 rounded hover:bg-white/30 transition-colors">ADMIN</Link>
                 </nav>

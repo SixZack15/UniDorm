@@ -107,10 +107,10 @@ export default function AccountingReports() {
 
     const getReportTypeLabel = (type: Report['type']) => {
         const labels = {
-            utility_billing: 'Utility Billing',
-            students_paid: 'Students Paid',
-            students_unpaid: 'Students Unpaid',
-            everything: 'Complete Report'
+            utility_billing: 'Hóa đơn tiện ích',
+            students_paid: 'Sinh viên đã thanh toán',
+            students_unpaid: 'Sinh viên chưa thanh toán',
+            everything: 'Báo cáo đầy đủ'
         };
         return labels[type];
     };
@@ -127,7 +127,7 @@ export default function AccountingReports() {
 
     const getPeriodLabel = (report: Report) => {
         if (report.period === 'monthly') {
-            const monthNames = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+            const monthNames = ['Tháng 1', 'Tháng 2', 'Tháng 3', 'Tháng 4', 'Tháng 5', 'Tháng 6', 'Tháng 7', 'Tháng 8', 'Tháng 9', 'Tháng 10', 'Tháng 11', 'Tháng 12'];
             return `${monthNames[parseInt(report.month || '1') - 1]} ${report.year}`;
         } else {
             return `${report.quarter} ${report.year}`;
@@ -139,8 +139,8 @@ export default function AccountingReports() {
             {/* Header */}
             <div className="flex items-center justify-between">
                 <div>
-                    <h1 className="text-3xl font-bold text-gray-900">Financial Reports</h1>
-                    <p className="text-gray-600 mt-1">Generate and manage financial reports</p>
+                    <h1 className="text-3xl font-bold text-gray-900">Báo cáo Tài chính</h1>
+                    <p className="text-gray-600 mt-1">Tạo và quản lý báo cáo tài chính</p>
                 </div>
                 <button
                     onClick={() => setShowForm(!showForm)}
@@ -149,7 +149,7 @@ export default function AccountingReports() {
                     <svg className="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4v16m8-8H4" />
                     </svg>
-                    Create New Report
+                    Tạo Báo cáo Mới
                 </button>
             </div>
 
@@ -157,14 +157,14 @@ export default function AccountingReports() {
             {showForm && (
                 <div className="bg-white rounded-xl shadow-lg border border-gray-200 overflow-hidden">
                     <div className="bg-gradient-to-r from-emerald-600 to-emerald-700 px-6 py-4">
-                        <h2 className="text-xl font-bold text-white">Create New Report</h2>
+                        <h2 className="text-xl font-bold text-white">Tạo Báo cáo Mới</h2>
                     </div>
                     <form onSubmit={handleCreateReport} className="p-6 space-y-6">
                         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                             {/* Report Type */}
                             <div>
                                 <label className="block text-sm font-semibold text-gray-700 mb-2">
-                                    Report Type
+                                    Loại Báo cáo
                                 </label>
                                 <select
                                     value={reportType}
@@ -172,17 +172,17 @@ export default function AccountingReports() {
                                     className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 transition-colors"
                                     required
                                 >
-                                    <option value="everything">Complete Report (Everything)</option>
-                                    <option value="utility_billing">Utility Billing</option>
-                                    <option value="students_paid">Students Paid</option>
-                                    <option value="students_unpaid">Students Unpaid</option>
+                                    <option value="everything">Báo cáo đầy đủ (Tất cả)</option>
+                                    <option value="utility_billing">Hóa đơn tiện ích</option>
+                                    <option value="students_paid">Sinh viên đã thanh toán</option>
+                                    <option value="students_unpaid">Sinh viên chưa thanh toán</option>
                                 </select>
                             </div>
 
                             {/* Period Type */}
                             <div>
                                 <label className="block text-sm font-semibold text-gray-700 mb-2">
-                                    Period Type
+                                    Loại Kỳ
                                 </label>
                                 <select
                                     value={period}
@@ -190,8 +190,8 @@ export default function AccountingReports() {
                                     className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 transition-colors"
                                     required
                                 >
-                                    <option value="monthly">Monthly</option>
-                                    <option value="quarterly">Quarterly</option>
+                                    <option value="monthly">Hàng tháng</option>
+                                    <option value="quarterly">Hàng quý</option>
                                 </select>
                             </div>
 
@@ -199,7 +199,7 @@ export default function AccountingReports() {
                             {period === 'monthly' ? (
                                 <div>
                                     <label className="block text-sm font-semibold text-gray-700 mb-2">
-                                        Month
+                                        Tháng
                                     </label>
                                     <select
                                         value={month}
@@ -207,25 +207,25 @@ export default function AccountingReports() {
                                         className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 transition-colors"
                                         required
                                     >
-                                        <option value="">Select Month</option>
-                                        <option value="01">January</option>
-                                        <option value="02">February</option>
-                                        <option value="03">March</option>
-                                        <option value="04">April</option>
-                                        <option value="05">May</option>
-                                        <option value="06">June</option>
-                                        <option value="07">July</option>
-                                        <option value="08">August</option>
-                                        <option value="09">September</option>
-                                        <option value="10">October</option>
-                                        <option value="11">November</option>
-                                        <option value="12">December</option>
+                                        <option value="">Chọn Tháng</option>
+                                        <option value="01">Tháng 1</option>
+                                        <option value="02">Tháng 2</option>
+                                        <option value="03">Tháng 3</option>
+                                        <option value="04">Tháng 4</option>
+                                        <option value="05">Tháng 5</option>
+                                        <option value="06">Tháng 6</option>
+                                        <option value="07">Tháng 7</option>
+                                        <option value="08">Tháng 8</option>
+                                        <option value="09">Tháng 9</option>
+                                        <option value="10">Tháng 10</option>
+                                        <option value="11">Tháng 11</option>
+                                        <option value="12">Tháng 12</option>
                                     </select>
                                 </div>
                             ) : (
                                 <div>
                                     <label className="block text-sm font-semibold text-gray-700 mb-2">
-                                        Quarter
+                                        Quý
                                     </label>
                                     <select
                                         value={quarter}
@@ -233,10 +233,10 @@ export default function AccountingReports() {
                                         className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 transition-colors"
                                         required
                                     >
-                                        <option value="Q1">Q1 (Jan - Mar)</option>
-                                        <option value="Q2">Q2 (Apr - Jun)</option>
-                                        <option value="Q3">Q3 (Jul - Sep)</option>
-                                        <option value="Q4">Q4 (Oct - Dec)</option>
+                                        <option value="Q1">Quý 1 (Tháng 1 - 3)</option>
+                                        <option value="Q2">Quý 2 (Tháng 4 - 6)</option>
+                                        <option value="Q3">Quý 3 (Tháng 7 - 9)</option>
+                                        <option value="Q4">Quý 4 (Tháng 10 - 12)</option>
                                     </select>
                                 </div>
                             )}
@@ -244,7 +244,7 @@ export default function AccountingReports() {
                             {/* Year */}
                             <div>
                                 <label className="block text-sm font-semibold text-gray-700 mb-2">
-                                    Year
+                                    Năm
                                 </label>
                                 <input
                                     type="number"
@@ -265,13 +265,13 @@ export default function AccountingReports() {
                                 onClick={() => setShowForm(false)}
                                 className="px-6 py-2.5 border border-gray-300 text-gray-700 font-medium rounded-lg hover:bg-gray-50 transition-colors"
                             >
-                                Cancel
+                                Hủy
                             </button>
                             <button
                                 type="submit"
                                 className="px-6 py-2.5 bg-gradient-to-r from-emerald-600 to-emerald-700 text-white font-semibold rounded-lg hover:from-emerald-700 hover:to-emerald-800 transition-all shadow-md"
                             >
-                                Generate Report
+                                Tạo Báo cáo
                             </button>
                         </div>
                     </form>
@@ -281,8 +281,8 @@ export default function AccountingReports() {
             {/* Reports List */}
             <div className="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden">
                 <div className="px-6 py-4 border-b border-gray-200 bg-gray-50">
-                    <h2 className="text-lg font-bold text-gray-900">Generated Reports</h2>
-                    <p className="text-sm text-gray-600 mt-1">View and export previously generated reports</p>
+                    <h2 className="text-lg font-bold text-gray-900">Báo cáo đã tạo</h2>
+                    <p className="text-sm text-gray-600 mt-1">Xem và xuất các báo cáo đã tạo trước đó</p>
                 </div>
 
                 {reports.length === 0 ? (
@@ -290,8 +290,8 @@ export default function AccountingReports() {
                         <svg className="w-16 h-16 mx-auto text-gray-300 mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
                         </svg>
-                        <p className="text-gray-500 font-medium">No reports generated yet</p>
-                        <p className="text-sm text-gray-400 mt-1">Click "Create New Report" to get started</p>
+                        <p className="text-gray-500 font-medium">Chưa có báo cáo nào được tạo</p>
+                        <p className="text-sm text-gray-400 mt-1">Nhấn "Tạo Báo cáo Mới" để bắt đầu</p>
                     </div>
                 ) : (
                     <div className="divide-y divide-gray-200">
@@ -340,7 +340,7 @@ export default function AccountingReports() {
                                                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
                                                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
                                             </svg>
-                                            View
+                                            Xem
                                         </Link>
                                         <Link
                                             href={`/accounting/reports/view?id=${report.id}`}
@@ -349,7 +349,7 @@ export default function AccountingReports() {
                                             <svg className="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 17h2a2 2 0 002-2v-4a2 2 0 00-2-2H5a2 2 0 00-2 2v4a2 2 0 002 2h2m2 4h6a2 2 0 002-2v-4a2 2 0 00-2-2H9a2 2 0 00-2 2v4a2 2 0 002 2zm8-12V5a2 2 0 00-2-2H9a2 2 0 00-2 2v4h10z" />
                                             </svg>
-                                            Export
+                                            Xuất
                                         </Link>
                                     </div>
                                 </div>

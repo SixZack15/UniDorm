@@ -39,11 +39,11 @@ export default function InvoicesPage() {
     }, []);
 
     const handleDelete = (id: string) => {
-        if (confirm('Are you sure you want to delete this invoice?')) {
+        if (confirm('Bạn có chắc chắn muốn xóa biên lai này không?')) {
             const newInvoices = invoices.filter(inv => inv.id !== id);
             setInvoices(newInvoices);
             localStorage.setItem('accounting_invoices', JSON.stringify(newInvoices));
-            toast.success('Invoice deleted successfully');
+            toast.success('Đã xóa biên lai thành công');
         }
     };
 
@@ -60,15 +60,15 @@ export default function InvoicesPage() {
         }
     };
 
-    if (isLoading) return <div className="p-8 text-center">Loading invoices...</div>;
+    if (isLoading) return <div className="p-8 text-center">Đang tải biên lai...</div>;
 
     return (
         <div className="space-y-6">
             <Toaster />
             <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
                 <div>
-                    <h1 className="text-2xl font-bold text-gray-900">Invoice Management</h1>
-                    <p className="text-gray-500">Manage student fees and payments</p>
+                    <h1 className="text-2xl font-bold text-gray-900">Quản lý Biên lai</h1>
+                    <p className="text-gray-500">Quản lý các khoản phí và thanh toán của sinh viên</p>
                 </div>
                 <Link 
                     href="/accounting/invoices/create"
@@ -77,7 +77,7 @@ export default function InvoicesPage() {
                     <svg className="-ml-1 mr-2 h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4v16m8-8H4" />
                     </svg>
-                    Create Invoice
+                    Tạo Biên lai
                 </Link>
             </div>
 
@@ -86,19 +86,19 @@ export default function InvoicesPage() {
                     <table className="min-w-full divide-y divide-gray-200">
                         <thead className="bg-gray-50">
                             <tr>
-                                <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Invoice ID</th>
-                                <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Student</th>
-                                <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Date</th>
-                                <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Amount</th>
-                                <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Status</th>
-                                <th scope="col" className="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">Actions</th>
+                                <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Mã Biên lai</th>
+                                <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Sinh viên</th>
+                                <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Ngày</th>
+                                <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Số tiền</th>
+                                <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Trạng thái</th>
+                                <th scope="col" className="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">Thao tác</th>
                             </tr>
                         </thead>
                         <tbody className="bg-white divide-y divide-gray-200">
                             {invoices.length === 0 ? (
                                 <tr>
                                     <td colSpan={6} className="px-6 py-12 text-center text-gray-500">
-                                        No invoices found. Create one to get started.
+                                        Không tìm thấy biên lai nào. Hãy tạo mới để bắt đầu.
                                     </td>
                                 </tr>
                             ) : (
@@ -134,7 +134,7 @@ export default function InvoicesPage() {
                                                 <button
                                                     onClick={() => router.push(`/accounting/invoices/view?id=${invoice.id}`)}
                                                     className="text-blue-600 hover:text-blue-900 bg-blue-50 p-2 rounded hover:bg-blue-100 transition-colors"
-                                                    title="View Details"
+                                                    title="Xem chi tiết"
                                                 >
                                                     <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
@@ -144,7 +144,7 @@ export default function InvoicesPage() {
                                                 <button
                                                     onClick={() => router.push(`/accounting/invoices/create?id=${invoice.id}`)}
                                                     className="text-indigo-600 hover:text-indigo-900 bg-indigo-50 p-2 rounded hover:bg-indigo-100 transition-colors"
-                                                    title="Edit"
+                                                    title="Chỉnh sửa"
                                                 >
                                                     <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
@@ -153,7 +153,7 @@ export default function InvoicesPage() {
                                                 <button
                                                     onClick={() => handleDelete(invoice.id)}
                                                     className="text-red-600 hover:text-red-900 bg-red-50 p-2 rounded hover:bg-red-100 transition-colors"
-                                                    title="Delete"
+                                                    title="Xóa"
                                                 >
                                                     <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />

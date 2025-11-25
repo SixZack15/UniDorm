@@ -106,7 +106,7 @@ export default function StudentForm({ studentId, isEdit = false }: StudentFormPr
             </div>
 
             {/* Form */}
-            <form onSubmit={handleSubmit} className="bg-white rounded-2xl shadow-sm border border-gray-100 p-6 space-y-6">
+            <form onSubmit={handleSubmit} noValidate className="bg-white rounded-2xl shadow-sm border border-gray-100 p-6 space-y-6">
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                     {/* MSSV */}
                     <div>
@@ -222,25 +222,6 @@ export default function StudentForm({ studentId, isEdit = false }: StudentFormPr
                             required
                             className="block w-full rounded-md border-gray-300 shadow-sm focus:border-primary focus:ring-primary sm:text-sm"
                         />
-                    </div>
-
-                    {/* Trạng thái */}
-                    <div>
-                        <label htmlFor="status" className="block text-sm font-medium text-gray-700 mb-1">
-                            Trạng thái <span className="text-red-500">*</span>
-                        </label>
-                        <select
-                            id="status"
-                            name="status"
-                            value={formData.status}
-                            onChange={handleChange}
-                            required
-                            className="block w-full rounded-md border-gray-300 shadow-sm focus:border-primary focus:ring-primary sm:text-sm"
-                        >
-                            <option value="đang ở">Đang ở</option>
-                            <option value="chờ duyệt">Chờ duyệt</option>
-                            <option value="từ chối">Từ chối</option>
-                        </select>
                     </div>
 
                     {/* Tên người thân */}

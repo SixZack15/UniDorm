@@ -111,12 +111,6 @@ export default function SystemSettingsPage() {
                                 className="block w-full pl-10 rounded-md border-gray-300 focus:border-primary focus:ring-primary sm:text-sm"
                             />
                         </div>
-                        <button className="w-full md:w-auto bg-primary hover:bg-primary-dark text-white font-bold py-2 px-4 rounded-lg shadow-sm transition-colors flex items-center justify-center gap-2">
-                            <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
-                            </svg>
-                            THÊM TÀI KHOẢN
-                        </button>
                     </div>
 
                     {/* User Table */}
@@ -200,28 +194,28 @@ export default function SystemSettingsPage() {
                                 <label className="block text-sm font-medium text-gray-700 mb-1">Giá Điện (VND/kWh)</label>
                                 <div className="flex gap-2">
                                     <input type="text" defaultValue="2.500" className="block w-full rounded-md border-gray-300 focus:border-primary focus:ring-primary sm:text-sm" />
-                                    <button className="text-primary hover:text-primary-dark font-medium text-sm">Sửa</button>
+                                
                                 </div>
                             </div>
                             <div>
                                 <label className="block text-sm font-medium text-gray-700 mb-1">Giá Nước (VND/m3)</label>
                                 <div className="flex gap-2">
                                     <input type="text" defaultValue="15.000" className="block w-full rounded-md border-gray-300 focus:border-primary focus:ring-primary sm:text-sm" />
-                                    <button className="text-primary hover:text-primary-dark font-medium text-sm">Sửa</button>
+                  
                                 </div>
                             </div>
                             <div>
                                 <label className="block text-sm font-medium text-gray-700 mb-1">Giá Phòng Cơ bản (VND/tháng)</label>
                                 <div className="flex gap-2">
                                     <input type="text" defaultValue="500.000" className="block w-full rounded-md border-gray-300 focus:border-primary focus:ring-primary sm:text-sm" />
-                                    <button className="text-primary hover:text-primary-dark font-medium text-sm">Sửa</button>
+                                   
                                 </div>
                             </div>
                             <div>
                                 <label className="block text-sm font-medium text-gray-700 mb-1">Ngày chốt số liệu (Hàng tháng)</label>
                                 <div className="flex gap-2">
                                     <input type="number" defaultValue="15" className="block w-full rounded-md border-gray-300 focus:border-primary focus:ring-primary sm:text-sm" />
-                                    <button className="text-primary hover:text-primary-dark font-medium text-sm">Sửa</button>
+                                  
                                 </div>
                             </div>
 

@@ -65,6 +65,25 @@ export default function AdminRequestsPage() {
         });
     };
 
+    const handleReject = (requestId: string) => {
+        setRequests(prev => prev.map(req => {
+            if (req.id === requestId) {
+                const updated = { ...req, status: 'Từ chối' as const };
+                // Update localStorage if it exists
+                if (subscriptionStorage.getPaymentExtension()?.id === requestId) {
+                    subscriptionStorage.savePaymentExtension(updated);
+                }
+                return updated;
+            }
+            return req;
+        }));
+        
+        toast.success('Đã từ chối yêu cầu.', {
+            duration: 3000,
+            icon: '✅',
+        });
+    };
+
     const getStatusColor = (status: string) => {
         switch (status) {
             case 'Đã duyệt':
@@ -117,6 +136,14 @@ export default function AdminRequestsPage() {
                                     className="px-4 py-2 bg-primary hover:bg-primary-dark text-white font-medium rounded-lg shadow-sm transition-colors"
                                 >
                                     Xử lý yêu cầu
+                                </button>
+                            )}
+                            {request.status === 'Đang đợi' && (
+                                <button
+                                    onClick={() => handleReject(request.id)}
+                                    className="px-4 py-2 bg-primary hover:bg-primary-dark text-white font-medium rounded-lg shadow-sm transition-colors"
+                                >
+                                    Từ chối
                                 </button>
                             )}
                         </div>

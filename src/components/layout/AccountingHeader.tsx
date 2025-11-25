@@ -32,9 +32,9 @@ export function AccountingHeader({ onMenuClick }: { onMenuClick: () => void }) {
                 {/* Desktop Nav */}
                 <nav className="hidden lg:flex items-center gap-6 ml-8 text-sm font-medium">
                     <Link href="/accounting/dashboard" className="hover:text-white/80 transition-colors">Dashboard</Link>
-                    <Link href="/accounting/invoices" className="hover:text-white/80 transition-colors">Invoices</Link>
-                    <Link href="/accounting/receipts" className="hover:text-white/80 transition-colors">Receipts</Link>
-                    <Link href="/accounting/reports" className="hover:text-white/80 transition-colors">Reports</Link>
+                    <Link href="/accounting/invoices" className="hover:text-white/80 transition-colors">Biên lai</Link>
+                    <Link href="/accounting/receipts" className="hover:text-white/80 transition-colors">Hóa đơn</Link>
+                    <Link href="/accounting/reports" className="hover:text-white/80 transition-colors">Báo cáo</Link>
                 </nav>
             </div>
 
