@@ -6,3 +6,4 @@ export default function NewStudentPage() {
     return <StudentForm isEdit={false} />;
 }
 
+
