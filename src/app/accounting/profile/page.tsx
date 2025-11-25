@@ -35,6 +35,16 @@ export default function AccountingProfilePage() {
         }, 2000);
     };
 
+    const handleSaveChanges = () => {
+        toast.success('Đã lưu thay đổi thành công!', {
+            duration: 2000,
+            icon: '✅',
+        });
+        setTimeout(() => {
+            router.push('/accounting/dashboard');
+        }, 2000);
+    };
+
     return (
         <div className="space-y-6">
             <Toaster position="top-right" />
@@ -173,43 +183,6 @@ export default function AccountingProfilePage() {
                                 </div>
                             </section>
 
-                            {/* Section 3: Emergency Contact */}
-                            <section>
-                                <h4 className="text-sm font-bold text-emerald-700 uppercase tracking-wider mb-4 border-b border-gray-100 pb-2">
-                                    3. Liên hệ khẩn cấp <span className="text-gray-400 font-normal normal-case ml-2">(Bắt buộc)</span>
-                                </h4>
-                                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                                    <div>
-                                        <label className="block text-sm font-medium text-gray-700 mb-1">Họ tên người thân</label>
-                                        <input
-                                            type="text"
-                                            defaultValue={user.emergencyName}
-                                            className="block w-full rounded-md border-gray-300 shadow-sm focus:border-emerald-600 focus:ring-emerald-600 sm:text-sm"
-                                        />
-                                    </div>
-                                    <div>
-                                        <label className="block text-sm font-medium text-gray-700 mb-1">Mối quan hệ</label>
-                                        <select
-                                            defaultValue={user.emergencyRelationship}
-                                            className="block w-full rounded-md border-gray-300 shadow-sm focus:border-emerald-600 focus:ring-emerald-600 sm:text-sm"
-                                        >
-                                            <option>Người thân</option>
-                                            <option>Vợ/Chồng</option>
-                                            <option>Anh/Chị/Em</option>
-                                            <option>Khác</option>
-                                        </select>
-                                    </div>
-                                    <div>
-                                        <label className="block text-sm font-medium text-gray-700 mb-1">Số ĐT người thân</label>
-                                        <input
-                                            type="tel"
-                                            defaultValue={user.emergencyPhone}
-                                            className="block w-full rounded-md border-gray-300 shadow-sm focus:border-emerald-600 focus:ring-emerald-600 sm:text-sm"
-                                        />
-                                    </div>
-                                </div>
-                            </section>
-
                             {/* Actions */}
                             <div className="flex items-center justify-between gap-4 pt-6 border-t border-gray-100">
                                 <button
@@ -222,7 +195,7 @@ export default function AccountingProfilePage() {
                                     <button className="px-4 py-2 border border-gray-300 rounded-md shadow-sm text-sm font-medium text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-emerald-600">
                                         Đổi mật khẩu
                                     </button>
-                                    <button className="px-4 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-emerald-600 hover:bg-emerald-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-emerald-600">
+                                    <button onClick={handleSaveChanges} className="px-4 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-emerald-600 hover:bg-emerald-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-emerald-600">
                                         Lưu thay đổi
                                     </button>
                                 </div>

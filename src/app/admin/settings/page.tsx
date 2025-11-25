@@ -1,63 +1,179 @@
 'use client';
 
 import Link from 'next/link';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
+import toast, { Toaster } from 'react-hot-toast';
+
+type UserStatus = 'ACTIVE' | 'LOCKED';
+type UserRole = 'STUDENT' | 'ROOM_MANAGER' | 'FINANCE_MANAGER' | 'ADMIN';
+
+interface User {
+    id: string;
+    email: string;
+    name: string;
+    role: UserRole;
+    status: UserStatus;
+}
+
+interface AuditLog {
+    id: number;
+    time: string;
+    user: string;
+    action: string;
+    detail: string;
+}
+
+interface SystemConfig {
+    electricityPrice: string;
+    waterPrice: string;
+    baseRoomPrice: string;
+    closingDay: string;
+}
 
 export default function SystemSettingsPage() {
     const [activeTab, setActiveTab] = useState<'USERS' | 'CONFIG'>('USERS');
 
-    // Mock Data for Users
-    const users = [
-        {
-            id: '01',
-            email: 'admin_finance@vlu.edu.vn',
-            name: 'Lê Thị Tài Chính',
-            role: 'FINANCE_MANAGER',
-            status: 'ACTIVE',
-        },
-        {
-            id: '02',
-            email: 'sv_21748020@vlu.edu.vn',
-            name: 'Nguyễn Văn A',
-            role: 'STUDENT',
-            status: 'LOCKED',
-        },
-        {
-            id: '03',
-            email: 'manager_room@vlu.edu.vn',
-            name: 'Phạm Quản Lý',
-            role: 'ROOM_MANAGER',
-            status: 'ACTIVE',
-        },
-    ];
+    // State for Users with localStorage persistence
+    const [users, setUsers] = useState<User[]>([]);
+    
+    // State for System Config
+    const [config, setConfig] = useState<SystemConfig>({
+        electricityPrice: '2.500',
+        waterPrice: '15.000',
+        baseRoomPrice: '500.000',
+        closingDay: '15',
+    });
 
-    // Mock Data for Audit Logs
-    const auditLogs = [
-        {
-            id: 1,
-            time: '22/11 10:30 AM',
-            user: 'SuAdmin',
-            action: 'Update Giá Điện',
-            detail: '2.000 -> 2.500',
-        },
-        {
-            id: 2,
-            time: '21/11 09:00 AM',
-            user: 'Admin_Room',
-            action: 'Khóa TK sv_227...',
-            detail: 'Vi phạm nội quy',
-        },
-        {
-            id: 3,
-            time: '20/11 14:00 PM',
-            user: 'Admin_Fin',
-            action: 'Tạo User mới',
-            detail: 'manager_room',
-        },
-    ];
+    // State for Audit Logs
+    const [auditLogs, setAuditLogs] = useState<AuditLog[]>([]);
+
+    // Load data from localStorage on mount
+    useEffect(() => {
+        const savedUsers = localStorage.getItem('systemUsers');
+        const savedConfig = localStorage.getItem('systemConfig');
+        const savedLogs = localStorage.getItem('auditLogs');
+
+        if (savedUsers) {
+            setUsers(JSON.parse(savedUsers));
+        } else {
+            // Initial mock data
+            const initialUsers: User[] = [
+                {
+                    id: '01',
+                    email: 'admin_finance@vlu.edu.vn',
+                    name: 'Lê Thị Tài Chính',
+                    role: 'FINANCE_MANAGER',
+                    status: 'ACTIVE',
+                },
+                {
+                    id: '02',
+                    email: 'sv_21748020@vlu.edu.vn',
+                    name: 'Nguyễn Văn A',
+                    role: 'STUDENT',
+                    status: 'LOCKED',
+                },
+                {
+                    id: '03',
+                    email: 'manager_room@vlu.edu.vn',
+                    name: 'Phạm Quản Lý',
+                    role: 'ROOM_MANAGER',
+                    status: 'ACTIVE',
+                },
+            ];
+            setUsers(initialUsers);
+            localStorage.setItem('systemUsers', JSON.stringify(initialUsers));
+        }
+
+        if (savedConfig) {
+            setConfig(JSON.parse(savedConfig));
+        }
+
+        if (savedLogs) {
+            setAuditLogs(JSON.parse(savedLogs));
+        } else {
+            const initialLogs: AuditLog[] = [
+                {
+                    id: 1,
+                    time: new Date().toLocaleString('vi-VN'),
+                    user: 'SuAdmin',
+                    action: 'Khởi tạo hệ thống',
+                    detail: 'Tải cấu hình mặc định',
+                },
+            ];
+            setAuditLogs(initialLogs);
+            localStorage.setItem('auditLogs', JSON.stringify(initialLogs));
+        }
+    }, []);
+
+    const addAuditLog = (action: string, detail: string) => {
+        const newLog: AuditLog = {
+            id: Date.now(),
+            time: new Date().toLocaleString('vi-VN'),
+            user: 'Admin',
+            action,
+            detail,
+        };
+        const updatedLogs = [newLog, ...auditLogs].slice(0, 10); // Keep last 10 logs
+        setAuditLogs(updatedLogs);
+        localStorage.setItem('auditLogs', JSON.stringify(updatedLogs));
+    };
+
+    const handleToggleUserStatus = (userId: string) => {
+        const updatedUsers = users.map(user => {
+            if (user.id === userId) {
+                const newStatus: UserStatus = user.status === 'ACTIVE' ? 'LOCKED' : 'ACTIVE';
+                addAuditLog(
+                    `${newStatus === 'LOCKED' ? 'Khóa' : 'Mở khóa'} TK ${user.email}`,
+                    `Trạng thái: ${user.status} → ${newStatus}`
+                );
+                toast.success(`${newStatus === 'LOCKED' ? 'Khóa' : 'Mở khóa'} tài khoản thành công!`);
+                return { ...user, status: newStatus };
+            }
+            return user;
+        });
+        setUsers(updatedUsers);
+        localStorage.setItem('systemUsers', JSON.stringify(updatedUsers));
+    };
+
+    const handleDeleteUser = (userId: string) => {
+        const user = users.find(u => u.id === userId);
+        if (user && confirm(`Bạn có chắc chắn muốn xóa tài khoản ${user.email}?`)) {
+            const updatedUsers = users.filter(u => u.id !== userId);
+            setUsers(updatedUsers);
+            localStorage.setItem('systemUsers', JSON.stringify(updatedUsers));
+            addAuditLog(`Xóa TK ${user.email}`, `Người dùng: ${user.name}`);
+            toast.success('Xóa tài khoản thành công!');
+        }
+    };
+
+    const handleRoleChange = (userId: string, newRole: UserRole) => {
+        const updatedUsers = users.map(user => {
+            if (user.id === userId) {
+                addAuditLog(
+                    `Thay đổi quyền ${user.email}`,
+                    `${user.role} → ${newRole}`
+                );
+                toast.success('Cập nhật vai trò thành công!');
+                return { ...user, role: newRole };
+            }
+            return user;
+        });
+        setUsers(updatedUsers);
+        localStorage.setItem('systemUsers', JSON.stringify(updatedUsers));
+    };
+
+    const handleSaveConfig = () => {
+        localStorage.setItem('systemConfig', JSON.stringify(config));
+        addAuditLog(
+            'Cập nhật cấu hình hệ thống',
+            `Điện: ${config.electricityPrice}, Nước: ${config.waterPrice}, Phòng: ${config.baseRoomPrice}`
+        );
+        toast.success('Thay đổi thành công!');
+    };
 
     return (
         <div className="space-y-6">
+            <Toaster position="top-right" />
             {/* Breadcrumb */}
             <nav className="flex text-sm text-gray-500">
                 <Link href="/dashboard" className="hover:text-primary">Trang chủ</Link>
@@ -135,7 +251,8 @@ export default function SystemSettingsPage() {
                                             <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">{user.name}</td>
                                             <td className="px-6 py-4 whitespace-nowrap">
                                                 <select
-                                                    defaultValue={user.role}
+                                                    value={user.role}
+                                                    onChange={(e) => handleRoleChange(user.id, e.target.value as UserRole)}
                                                     className="block w-full rounded-md border-gray-300 py-1 text-sm focus:border-primary focus:outline-none focus:ring-primary"
                                                 >
                                                     <option value="STUDENT">Sinh viên</option>
@@ -158,19 +275,19 @@ export default function SystemSettingsPage() {
                                             <td className="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
                                                 <div className="flex justify-end gap-2">
                                                     {user.status === 'ACTIVE' ? (
-                                                        <button className="text-yellow-600 hover:text-yellow-900 p-1 hover:bg-yellow-50 rounded" title="Khóa">
+                                                        <button onClick={() => handleToggleUserStatus(user.id)} className="text-yellow-600 hover:text-yellow-900 p-1 hover:bg-yellow-50 rounded" title="Khóa">
                                                             <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                                                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
                                                             </svg>
                                                         </button>
                                                     ) : (
-                                                        <button className="text-green-600 hover:text-green-900 p-1 hover:bg-green-50 rounded" title="Mở Khóa">
+                                                        <button onClick={() => handleToggleUserStatus(user.id)} className="text-green-600 hover:text-green-900 p-1 hover:bg-green-50 rounded" title="Mở Khóa">
                                                             <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                                                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 11V7a4 4 0 118 0m-4 8v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2z" />
                                                             </svg>
                                                         </button>
                                                     )}
-                                                    <button className="text-red-600 hover:text-red-900 p-1 hover:bg-red-50 rounded" title="Xóa">
+                                                    <button onClick={() => handleDeleteUser(user.id)} className="text-red-600 hover:text-red-900 p-1 hover:bg-red-50 rounded" title="Xóa">
                                                         <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                                             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
                                                         </svg>
@@ -193,34 +310,54 @@ export default function SystemSettingsPage() {
                             <div>
                                 <label className="block text-sm font-medium text-gray-700 mb-1">Giá Điện (VND/kWh)</label>
                                 <div className="flex gap-2">
-                                    <input type="text" defaultValue="2.500" className="block w-full rounded-md border-gray-300 focus:border-primary focus:ring-primary sm:text-sm" />
+                                    <input 
+                                        type="text" 
+                                        value={config.electricityPrice} 
+                                        onChange={(e) => setConfig({...config, electricityPrice: e.target.value})}
+                                        className="block w-full rounded-md border-gray-300 focus:border-primary focus:ring-primary sm:text-sm" 
+                                    />
                                 
                                 </div>
                             </div>
                             <div>
                                 <label className="block text-sm font-medium text-gray-700 mb-1">Giá Nước (VND/m3)</label>
                                 <div className="flex gap-2">
-                                    <input type="text" defaultValue="15.000" className="block w-full rounded-md border-gray-300 focus:border-primary focus:ring-primary sm:text-sm" />
+                                    <input 
+                                        type="text" 
+                                        value={config.waterPrice} 
+                                        onChange={(e) => setConfig({...config, waterPrice: e.target.value})}
+                                        className="block w-full rounded-md border-gray-300 focus:border-primary focus:ring-primary sm:text-sm" 
+                                    />
                   
                                 </div>
                             </div>
                             <div>
                                 <label className="block text-sm font-medium text-gray-700 mb-1">Giá Phòng Cơ bản (VND/tháng)</label>
                                 <div className="flex gap-2">
-                                    <input type="text" defaultValue="500.000" className="block w-full rounded-md border-gray-300 focus:border-primary focus:ring-primary sm:text-sm" />
+                                    <input 
+                                        type="text" 
+                                        value={config.baseRoomPrice} 
+                                        onChange={(e) => setConfig({...config, baseRoomPrice: e.target.value})}
+                                        className="block w-full rounded-md border-gray-300 focus:border-primary focus:ring-primary sm:text-sm" 
+                                    />
                                    
                                 </div>
                             </div>
                             <div>
                                 <label className="block text-sm font-medium text-gray-700 mb-1">Ngày chốt số liệu (Hàng tháng)</label>
                                 <div className="flex gap-2">
-                                    <input type="number" defaultValue="15" className="block w-full rounded-md border-gray-300 focus:border-primary focus:ring-primary sm:text-sm" />
+                                    <input 
+                                        type="number" 
+                                        value={config.closingDay} 
+                                        onChange={(e) => setConfig({...config, closingDay: e.target.value})}
+                                        className="block w-full rounded-md border-gray-300 focus:border-primary focus:ring-primary sm:text-sm" 
+                                    />
                                   
                                 </div>
                             </div>
 
                             <div className="pt-4 mt-4 border-t border-gray-100">
-                                <button className="w-full bg-primary hover:bg-primary-dark text-white font-bold py-2 px-4 rounded-lg shadow-sm transition-colors">
+                                <button onClick={handleSaveConfig} className="w-full bg-primary hover:bg-primary-dark text-white font-bold py-2 px-4 rounded-lg shadow-sm transition-colors">
                                     LƯU THAY ĐỔI
                                 </button>
                             </div>
