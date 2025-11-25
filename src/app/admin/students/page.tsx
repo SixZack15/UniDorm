@@ -19,6 +19,9 @@ export default function StudentRecordsPage() {
             status: 'ACTIVE',
             statusLabel: 'ĐANG Ở',
             statusColor: 'bg-green-100 text-green-800',
+            checkInStatus: 'CHECKED_IN',
+            checkInLabel: 'Đang check in',
+            checkInColor: 'bg-blue-100 text-blue-800',
         },
         {
             id: '22711005',
@@ -29,6 +32,9 @@ export default function StudentRecordsPage() {
             status: 'PENDING',
             statusLabel: 'CHỜ DUYỆT',
             statusColor: 'bg-yellow-100 text-yellow-800',
+            checkInStatus: 'CHECKED_OUT',
+            checkInLabel: 'Đã checkout',
+            checkInColor: 'bg-gray-100 text-gray-800',
         },
         {
             id: '20799123',
@@ -39,6 +45,9 @@ export default function StudentRecordsPage() {
             status: 'VIOLATION',
             statusLabel: 'VI PHẠM',
             statusColor: 'bg-red-100 text-red-800',
+            checkInStatus: 'CHECKED_IN',
+            checkInLabel: 'Đang check in',
+            checkInColor: 'bg-blue-100 text-blue-800',
         },
         {
             id: '21700001',
@@ -49,6 +58,9 @@ export default function StudentRecordsPage() {
             status: 'ACTIVE',
             statusLabel: 'ĐANG Ở',
             statusColor: 'bg-green-100 text-green-800',
+            checkInStatus: 'CHECKED_OUT',
+            checkInLabel: 'Đã checkout',
+            checkInColor: 'bg-gray-100 text-gray-800',
         },
     ]);
 
@@ -118,6 +130,11 @@ export default function StudentRecordsPage() {
                             <option>Vi phạm</option>
                         </select>
                         <select className="block w-full md:w-auto rounded-md border-gray-300 py-1.5 text-base focus:border-primary focus:outline-none focus:ring-primary sm:text-sm">
+                            <option>Tất cả Check-in</option>
+                            <option>Đang check in</option>
+                            <option>Đã checkout</option>
+                        </select>
+                        <select className="block w-full md:w-auto rounded-md border-gray-300 py-1.5 text-base focus:border-primary focus:outline-none focus:ring-primary sm:text-sm">
                             <option>Tất cả Tòa nhà</option>
                             <option>Khu A</option>
                             <option>Khu B</option>
@@ -141,6 +158,7 @@ export default function StudentRecordsPage() {
                                 <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Phòng</th>
                                 <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">SĐT</th>
                                 <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Trạng thái</th>
+                                <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Check-in</th>
                                 <th scope="col" className="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">Thao tác</th>
                             </tr>
                         </thead>
@@ -158,6 +176,11 @@ export default function StudentRecordsPage() {
                                     <td className="px-6 py-4 whitespace-nowrap">
                                         <span className={`px-2 inline-flex text-xs leading-5 font-semibold rounded-full ${student.statusColor}`}>
                                             {student.statusLabel}
+                                        </span>
+                                    </td>
+                                    <td className="px-6 py-4 whitespace-nowrap">
+                                        <span className={`px-2 inline-flex text-xs leading-5 font-semibold rounded-full ${student.checkInColor}`}>
+                                            {student.checkInLabel}
                                         </span>
                                     </td>
                                     <td className="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">

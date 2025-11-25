@@ -5,6 +5,7 @@ import { usePathname } from 'next/navigation';
 import { Header } from './Header';
 import { AdminHeader } from './AdminHeader';
 import { ManagementHeader } from './ManagementHeader';
+import { AccountingHeader } from './AccountingHeader';
 import { GuestHeader } from './GuestHeader';
 import { Footer } from './Footer';
 import { Sidebar } from './Sidebar';
@@ -19,6 +20,8 @@ export function Shell({ children }: { children: React.ReactNode }) {
     const isAdmin = pathname?.startsWith('/admin');
     // Determine if we are in "Management Mode"
     const isManagement = pathname?.startsWith('/management');
+    // Determine if we are in "Accounting Mode"
+    const isAccounting = pathname?.startsWith('/accounting');
 
     return (
         <div className="min-h-screen flex flex-col bg-gray-50 text-gray-900 font-sans">
@@ -32,6 +35,11 @@ export function Shell({ children }: { children: React.ReactNode }) {
             ) : isManagement ? (
                 <>
                     <ManagementHeader onMenuClick={() => setIsSidebarOpen(true)} />
+                    <Sidebar isOpen={isSidebarOpen} onClose={() => setIsSidebarOpen(false)} />
+                </>
+            ) : isAccounting ? (
+                <>
+                    <AccountingHeader onMenuClick={() => setIsSidebarOpen(true)} />
                     <Sidebar isOpen={isSidebarOpen} onClose={() => setIsSidebarOpen(false)} />
                 </>
             ) : (

@@ -2,23 +2,16 @@
 
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
-import { useState, useEffect } from 'react';
 
-export function ManagementHeader({ onMenuClick }: { onMenuClick: () => void }) {
+export function AccountingHeader({ onMenuClick }: { onMenuClick: () => void }) {
     const router = useRouter();
-    const [userRole, setUserRole] = useState<string | null>(null);
-
-    useEffect(() => {
-        const role = localStorage.getItem('userRole');
-        setUserRole(role);
-    }, []);
 
     const handleProfileClick = () => {
-        router.push('/management/profile');
+        router.push('/accounting/profile');
     };
 
     return (
-        <header className="bg-primary text-white shadow-md fixed top-0 left-0 right-0 z-50 h-16 flex items-center px-4 justify-between">
+        <header className="bg-emerald-700 text-white shadow-md fixed top-0 left-0 right-0 z-50 h-16 flex items-center px-4 justify-between">
             {/* Left: Hamburger (Mobile) & Logo */}
             <div className="flex items-center gap-4">
                 <button
@@ -31,23 +24,25 @@ export function ManagementHeader({ onMenuClick }: { onMenuClick: () => void }) {
                     </svg>
                 </button>
 
-                <Link href="/management/dashboard" className="text-xl font-bold tracking-tight flex items-center gap-2">
-                    <span className="bg-white text-primary px-2 py-1 rounded text-sm font-extrabold">VLU</span>
-                    <span>DORM MANAGEMENT</span>
+                <Link href="/accounting/dashboard" className="text-xl font-bold tracking-tight flex items-center gap-2">
+                    <span className="bg-white text-emerald-700 px-2 py-1 rounded text-sm font-extrabold">VLU</span>
+                    <span>FINANCE</span>
                 </Link>
 
                 {/* Desktop Nav */}
                 <nav className="hidden lg:flex items-center gap-6 ml-8 text-sm font-medium">
-                    <Link href="/management/dashboard" className="hover:text-white/80 transition-colors">Dashboard</Link>
-                    <Link href="/management/students" className="hover:text-white/80 transition-colors">Students</Link>
-                    <Link href="/management/rooms" className="hover:text-white/80 transition-colors">Rooms</Link>
-                    <Link href="/management/requests" className="hover:text-white/80 transition-colors">Requests</Link>
+                    <Link href="/accounting/dashboard" className="hover:text-white/80 transition-colors">Dashboard</Link>
+                    <Link href="/accounting/invoices" className="hover:text-white/80 transition-colors">Invoices</Link>
+                    <Link href="/accounting/receipts" className="hover:text-white/80 transition-colors">Receipts</Link>
+                    <Link href="/accounting/reports" className="hover:text-white/80 transition-colors">Reports</Link>
                 </nav>
             </div>
 
             {/* Right: Actions */}
             <div className="flex items-center gap-4">
-                <button className="p-2 hover:bg-white/10 rounded-full transition-colors relative">
+                <button 
+                    className="p-2 hover:bg-white/10 rounded-full transition-colors relative"
+                >
                     <span className="sr-only">Notifications</span>
                     <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9" />
@@ -60,10 +55,9 @@ export function ManagementHeader({ onMenuClick }: { onMenuClick: () => void }) {
                     className="w-8 h-8 bg-white/20 rounded-full flex items-center justify-center text-sm font-bold hover:bg-white/30 transition-colors cursor-pointer"
                     title="Profile"
                 >
-                    M
+                    F
                 </button>
             </div>
         </header>
     );
 }
-
