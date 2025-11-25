@@ -1,4 +1,32 @@
+'use client';
+
+import toast from 'react-hot-toast';
+
 export function Footer() {
+    const createApprovedRoom = () => {
+        const approvedSubscription = {
+            id: 'SUB-2024-001',
+            registrationId: 'REG-2024-001',
+            roomType: 'Phòng 4 Giường (Có Điều Hòa)',
+            roomName: 'Phòng 4 Giường (Có Điều Hòa)',
+            price: 1200000,
+            amenities: ['Điều hòa', 'Nước nóng', 'Tủ lạnh', 'Wi-Fi'],
+            status: 'APPROVED',
+            statusLabel: 'Đã duyệt',
+            submittedDate: '15/11/2024',
+            studentName: 'Nguyễn Văn A',
+            phoneNumber: '0901234567',
+            parentName: 'Nguyễn Văn Ba',
+            parentPhoneNumber: '0988777666',
+            registrationStatus: 'Đang ở',
+        };
+
+        localStorage.setItem('roomSubscription', JSON.stringify(approvedSubscription));
+        toast.success('✅ Đã tạo phòng đã được duyệt! Vào /profile để xem.', {
+            duration: 4000,
+        });
+    };
+
     return (
         <footer className="bg-gray-50 border-t border-gray-200 py-8 mt-auto">
             <div className="max-w-7xl mx-auto px-4 grid grid-cols-1 md:grid-cols-3 gap-8 text-sm text-gray-600">
@@ -16,6 +44,12 @@ export function Footer() {
                     <a href="#" className="hover:text-primary transition-colors">Internal Rules</a>
                     <a href="#" className="hover:text-primary transition-colors">Privacy Policy</a>
                     <a href="#" className="hover:text-primary transition-colors">Terms of Use</a>
+                    <button 
+                        onClick={createApprovedRoom}
+                        className="text-left hover:text-primary transition-colors text-sm font-normal"
+                    >
+                        🔧 Create Test Room (Dev)
+                    </button>
                 </div>
 
                 {/* Contact */}
@@ -32,3 +66,4 @@ export function Footer() {
         </footer>
     );
 }
+
