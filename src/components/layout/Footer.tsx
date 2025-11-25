@@ -1,30 +1,41 @@
 'use client';
 
 import toast from 'react-hot-toast';
+import { subscriptionStorage } from '@/utils/subscriptionStorage';
 
 export function Footer() {
-    const createApprovedRoom = () => {
-        const approvedSubscription = {
-            id: 'SUB-2024-001',
-            registrationId: 'REG-2024-001',
-            roomType: 'Phòng 4 Giường (Có Điều Hòa)',
-            roomName: 'Phòng 4 Giường (Có Điều Hòa)',
-            price: 1200000,
-            amenities: ['Điều hòa', 'Nước nóng', 'Tủ lạnh', 'Wi-Fi'],
-            status: 'APPROVED',
-            statusLabel: 'Đã duyệt',
-            submittedDate: '15/11/2024',
-            studentName: 'Nguyễn Văn A',
-            phoneNumber: '0901234567',
-            parentName: 'Nguyễn Văn Ba',
-            parentPhoneNumber: '0988777666',
-            registrationStatus: 'Đang ở',
-        };
+    const approveCurrentRoom = () => {
+        // Get current subscription
+        const currentSubscription = subscriptionStorage.getSubscription();
+        
+        if (!currentSubscription) {
+            // If no subscription exists, create a new approved one
+            const approvedSubscription = {"id":"SUB-2024-001","registrationId":"REG-2024-001","roomType":"Phòng 4 Giường (Có Điều Hòa)","roomName":"Phòng 4 Giường (Có Điều Hòa)","price":1200000,"amenities":["Điều hòa","Nước nóng","Tủ lạnh","Wi-Fi"],"status":"APPROVED","statusLabel":"Đã duyệt","submittedDate":"15/11/2024","studentName":"Nguyễn Văn A","phoneNumber":"0901234567","parentName":"Nguyễn Văn Ba","parentPhoneNumber":"0988777666","registrationStatus":"Đang ở"}
+            const unidorm_room_subscription = {"id":"REG-2025-007","registrationId":"REG-2025-073","roomType":"Phòng Dịch Vụ (4 Giường)","roomName":"Phòng Dịch Vụ (4 Giường)","price":1200000,"amenities":["Máy lạnh","Tủ lạnh","WC Riêng"],"status":"APPROVED","statusLabel":"Chờ duyệt","submittedDate":"25/11/2025","studentName":"","phoneNumber":"","parentName":"","parentPhoneNumber":"","registrationStatus":"Đang ở"}
+            localStorage.setItem('roomSubscription', JSON.stringify(approvedSubscription));
+            localStorage.setItem('unidorm_room_subscription', JSON.stringify(unidorm_room_subscription));
+        } else {
+            // Update existing subscription to "Đang ở" (approved status)
+            //subscriptionStorage.updateRegistrationStatus('Đang ở');
+            const approvedSubscription = {"id":"SUB-2024-001","registrationId":"REG-2024-001","roomType":"Phòng 4 Giường (Có Điều Hòa)","roomName":"Phòng 4 Giường (Có Điều Hòa)","price":1200000,"amenities":["Điều hòa","Nước nóng","Tủ lạnh","Wi-Fi"],"status":"APPROVED","statusLabel":"Đã duyệt","submittedDate":"15/11/2024","studentName":"Nguyễn Văn A","phoneNumber":"0901234567","parentName":"Nguyễn Văn Ba","parentPhoneNumber":"0988777666","registrationStatus":"Đang ở"}
+            const unidorm_room_subscription = {"id":"REG-2025-007","registrationId":"REG-2025-073","roomType":"Phòng Dịch Vụ (4 Giường)","roomName":"Phòng Dịch Vụ (4 Giường)","price":1200000,"amenities":["Máy lạnh","Tủ lạnh","WC Riêng"],"status":"APPROVED","statusLabel":"Chờ duyệt","submittedDate":"25/11/2025","studentName":"","phoneNumber":"","parentName":"","parentPhoneNumber":"","registrationStatus":"Đang ở"}
+            localStorage.setItem('roomSubscription', JSON.stringify(approvedSubscription));
+            localStorage.setItem('unidorm_room_subscription', JSON.stringify(unidorm_room_subscription));
+        }
+    };
 
-        localStorage.setItem('roomSubscription', JSON.stringify(approvedSubscription));
-        toast.success('✅ Đã tạo phòng đã được duyệt! Vào /profile để xem.', {
-            duration: 4000,
-        });
+    const wipeLocalStorage = () => {
+        // Save the current userRole
+        const userRole = localStorage.getItem('userRole');
+        
+        // Clear all localStorage
+        localStorage.clear();
+        
+        // Restore userRole if it existed
+        if (userRole) {
+            localStorage.setItem('userRole', userRole);
+        }
+        
     };
 
     return (
@@ -45,10 +56,16 @@ export function Footer() {
                     <a href="#" className="hover:text-primary transition-colors">Privacy Policy</a>
                     <a href="#" className="hover:text-primary transition-colors">Terms of Use</a>
                     <button 
-                        onClick={createApprovedRoom}
+                        onClick={approveCurrentRoom}
                         className="text-left hover:text-primary transition-colors text-sm font-normal"
                     >
-                        🔧 Create Test Room (Dev)
+                        🔧 Approve Room (Dev)
+                    </button>
+                    <button 
+                        onClick={wipeLocalStorage}
+                        className="text-left hover:text-red-600 transition-colors text-sm font-normal"
+                    >
+                        🗑️ Clear Data (Dev)
                     </button>
                 </div>
 
@@ -66,4 +83,6 @@ export function Footer() {
         </footer>
     );
 }
+
+
 
